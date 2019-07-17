@@ -1,13 +1,15 @@
 import React from 'react';
+import axios from 'axios';
 import {
   withStyles,
   createMuiTheme,
   Tab,
-  Tabs
+  Tabs,
+  Button
 } from '@material-ui/core';
 import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import Title from '../Title';
 import Input from '../../UI/Input';
@@ -21,6 +23,9 @@ const styles = {
   },
   tabContainer: {
     marginTop: theme.spacing(2)
+  },
+  button: {
+    marginTop: theme.spacing(2)
   }
 };
 
@@ -30,64 +35,46 @@ class Client extends React.Component {
     controls: {
       details: {
         name: {
-          id: 'name',
-          name: 'name',
           label: 'Name',
           value: '',
           placeholder: 'Enter company name'
         },
         abbrev: {
-          id: 'abbrev',
-          name: 'abbrev',
           label: 'Abbreviation',
           value: '',
           placeholder: 'Enter company short name'
         },
         address1: {
-          id: 'address1',
-          name: 'address1',
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1'
         },
         address2: {
-          id: 'address2',
-          name: 'address2',
           label: 'Address 2',
           value: '',
           placeholder: 'Enter address 2'
         },
         address3: {
-          id: 'address3',
-          name: 'address3',
           label: 'Address 3',
           value: '',
           placeholder: 'Enter address 3'
         },
         city: {
-          id: 'city',
-          name: 'city',
           label: 'City',
           value: '',
           placeholder: 'Enter city name'
         },
         state: {
-          id: 'state',
-          name: 'state',
           label: 'Province/State',
           value: '',
           placeholder: 'Enter province/state'
         },
         country: {
-          id: 'country',
-          name: 'country',
           label: 'Country',
           value: '',
           placeholder: 'Enter country name'
         },
         postal_code: {
-          id: 'postal_code',
-          name: 'postal_code',
           label: 'Postal/Zip code',
           value: '',
           placeholder: 'Enter postal/zip code'
@@ -95,43 +82,31 @@ class Client extends React.Component {
       },
       contact: {
         firstname: {
-          id: 'firstname',
-          name: 'firstname',
           label: 'First Name',
           value: '',
           placeholder: 'Enter first name'
         },
         lastname: {
-          id: 'lastname',
-          name: 'lastname',
           label: 'Last Name',
           value: '',
           placeholder: 'Enter last name'
         },
         address1: {
-          id: 'address1',
-          name: 'address1',
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1'
         },
         address2: {
-          id: 'address2',
-          name: 'address2',
           label: 'Address 2',
           value: '',
           placeholder: 'Enter address 2'
         },
         address3: {
-          id: 'address3',
-          name: 'address3',
           label: 'Address 3',
           value: '',
           placeholder: 'Enter address 3'
         },
         email: {
-          id: 'email',
-          name: 'email',
           label: 'Email',
           value: '',
           placeholder: 'Enter email address'
@@ -139,50 +114,36 @@ class Client extends React.Component {
       },
       contract: {
         address1: {
-          id: 'address1',
-          name: 'address1',
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1'
         },
         address2: {
-          id: 'address2',
-          name: 'address2',
           label: 'Address 2',
           value: '',
           placeholder: 'Enter address 2'
         },
         address3: {
-          id: 'address3',
-          name: 'address3',
           label: 'Address 3',
           value: '',
           placeholder: 'Enter address 3'
         },
         city: {
-          id: 'city',
-          name: 'city',
           label: 'City',
           value: '',
           placeholder: 'Enter city name'
         },
         state: {
-          id: 'state',
-          name: 'state',
           label: 'Province/State',
           value: '',
           placeholder: 'Enter province/state'
         },
         country: {
-          id: 'country',
-          name: 'country',
           label: 'Country',
           value: '',
           placeholder: 'Enter country name'
         },
         postal_code: {
-          id: 'postal_code',
-          name: 'postal_code',
           label: 'Postal/Zip code',
           value: '',
           placeholder: 'Enter postal/zip code'
@@ -190,50 +151,36 @@ class Client extends React.Component {
       },
       billing: {
         address1: {
-          id: 'address1',
-          name: 'address1',
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1'
         },
         address2: {
-          id: 'address2',
-          name: 'address2',
           label: 'Address 2',
           value: '',
           placeholder: 'Enter address 2'
         },
         address3: {
-          id: 'address3',
-          name: 'address3',
           label: 'Address 3',
           value: '',
           placeholder: 'Enter address 3'
         },
         city: {
-          id: 'city',
-          name: 'city',
           label: 'City',
           value: '',
           placeholder: 'Enter city name'
         },
         state: {
-          id: 'state',
-          name: 'state',
           label: 'Province/State',
           value: '',
           placeholder: 'Enter province/state'
         },
         country: {
-          id: 'country',
-          name: 'country',
           label: 'Country',
           value: '',
           placeholder: 'Enter country name'
         },
         postal_code: {
-          id: 'postal_code',
-          name: 'postal_code',
           label: 'Postal/Zip code',
           value: '',
           placeholder: 'Enter postal/zip code'
@@ -248,8 +195,87 @@ class Client extends React.Component {
     });
   }
 
-  updateInput = () => {
-    console.log('yes');
+  updateInput = (event, tab, key) => {
+    const value = event.target.value;
+
+    this.setState(state => {
+      return {
+        controls: {
+          ...state.controls,
+          [tab]: {
+            ...state.controls[tab],
+            [key]: {
+              ...state.controls[tab][key],
+              value: value
+            }
+          }
+        }
+      }
+    });
+  }
+
+  submitFormHandler = async () => {
+    try {
+      /*const data = {}; 
+    
+      for (let tab in this.state.controls) {
+        data[tab] = {};
+
+        for (let field in this.state.controls[tab]) {
+          data[tab][field] = this.state.controls[tab][field].value;
+        }
+      }*/
+
+      const data = {
+        companyName: this.state.controls.details.name.value,
+        abbreviation: this.state.controls.details.abbrev.value,
+        details: {
+          address1: this.state.controls.details.address1.value,
+          address2: this.state.controls.details.address2.value,
+          address3: this.state.controls.details.address3.value,
+          city: this.state.controls.details.city.value,
+          state: this.state.controls.details.state.value,
+          country: this.state.controls.details.country.value,
+          zip: this.state.controls.details.postal_code.value
+        },
+        billingAddress: {
+          address1: this.state.controls.billing.address1.value,
+          address2: this.state.controls.billing.address2.value,
+          address3: this.state.controls.billing.address3.value,
+          city: this.state.controls.billing.city.value,
+          state: this.state.controls.billing.state.value,
+          country: this.state.controls.billing.country.value,
+          zip: this.state.controls.billing.postal_code.value
+        },
+        contractAddress: {
+          address1: this.state.controls.contract.address1.value,
+          address2: this.state.controls.contract.address2.value,
+          address3: this.state.controls.contract.address3.value,
+          city: this.state.controls.contract.city.value,
+          state: this.state.controls.contract.state.value,
+          country: this.state.controls.contract.country.value,
+          zip: this.state.controls.contract.postal_code.value,
+        },
+        companyContact: {
+          firstName: this.state.controls.contact.firstname.value,
+          lastName: this.state.controls.contact.lastname.value,
+          emailId: this.state.controls.contact.email.value,
+          contactAddress: {
+            address1: this.state.controls.contact.address1.value,
+            address2: this.state.controls.contact.address2.value,
+            address3: this.state.controls.contact.address3.value
+          }
+        }
+      };
+
+      console.log(data);
+
+      const response = await axios.post('http://172.16.6.250:8080/company/add', data);
+
+      console.log(response);
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   render() {
@@ -263,17 +289,15 @@ class Client extends React.Component {
 
       return <Input
         key={key}
-        id={field.id}
-        name={field.name}
         label={field.label}
         placeholder={field.placeholder}
         value={field.value}
-        changeHandler={this.updateInput}
+        changeHandler={(event) => this.updateInput(event, tab, key)}
       />
     });
 
     let txt = null;
-    
+
     if (this.state.value === 'billing') {
       txt = <div>**Address used to determine the appropriate sales tax rate to apply to invoices**</div>
     }
@@ -281,20 +305,29 @@ class Client extends React.Component {
     return (
       <div className={classes.root}>
         <Title>Client</Title>
-        <Tabs 
-          value={this.state.value} 
+        <Tabs
+          value={this.state.value}
           onChange={this.handleChange}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth">
           <Tab label="Details" value="details" icon={<PhoneIcon />} />
-          <Tab label="Contact" value="contact" icon={<FavoriteIcon />} />
+          <Tab label="Contact" value="contact" icon={<BookmarkIcon />} />
           <Tab label="Contract Address" value="contract" icon={<PersonPinIcon />} />
           <Tab label="Billing Address" value="billing" icon={<ShoppingBasket />} />
         </Tabs>
         <div className={classes.tabContainer}>
           {txt}
           {fields}
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={this.submitFormHandler}>
+              Submit
+            </Button>
+          </div>
         </div>
       </div>
     )

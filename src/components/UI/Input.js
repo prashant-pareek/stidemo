@@ -19,8 +19,6 @@ const Input = (props) => {
 
   return (
     <TextField
-      id={props.id}
-      name={props.name}
       className={classes.field}
       label={props.label}
       placeholder={props.placeholder || ''}
