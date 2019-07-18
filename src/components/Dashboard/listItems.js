@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   ListItem,
   ListItemIcon,
@@ -19,7 +20,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Clients" />
+      <Link to="/"><ListItemText primary="Clients" /></Link>
     </ListItem>
   </div>
 );
