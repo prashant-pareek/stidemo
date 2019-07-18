@@ -163,6 +163,7 @@ export default function Dashboard() {
                 <Switch>
                   <Route exact path="/" component={Clients} />
                   <Route path="/clients/new" component={Client} />
+                  <Route path="/clients/:id" component={Client} />
                   <Redirect to="/" />
                 </Switch>
               </Paper>

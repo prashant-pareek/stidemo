@@ -10,7 +10,8 @@ import {
   TableRow,
   Button
 } from '@material-ui/core';
-import axios from 'axios';
+import { fetchClients } from '../../../store/actions/clients';
+import { connect } from 'react-redux';
 import Title from '../Title';
 
 const theme = createMuiTheme();
@@ -22,44 +23,30 @@ const styles = {
 };
 
 class Clients extends React.Component {
-  state = {
-    rows: null
-  };
-
   async componentDidMount() {
-    try {
-      const response = await axios.get('http://172.16.6.250:8080/companys');
-      
-      if (response.data) {
-        this.setState({
-          rows: response.data
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    await this.props.onFetchClients();
   }
 
   render() {
-    const { classes } = this.props;
+    const { clients, classes } = this.props;
     let tbl = null;
 
-    if (this.state.rows) {
+    if (clients) {
       tbl = (
         <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Abbreviation</TableCell>
-              <TableCell align="right">Company</TableCell>
+              <TableCell>Company</TableCell>
+              <TableCell align="right">Abbreviation</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.rows.map(row => (
+            {clients.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.abbreviation}</TableCell>
-                <TableCell align="right">{row.companyName}</TableCell>
+                <TableCell><Link to={'/clients/'+ row.id}>{row.companyName}</Link></TableCell>
+                <TableCell align="right">{row.abbreviation}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -80,4 +67,18 @@ class Clients extends React.Component {
   }
 }
 
-export default withStyles(styles)(Clients);
+const mapStateToProps = state => {
+  return {
+    success: state.clients.success,
+    clients: state.clients.clients,
+    error: state.clients.error
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onFetchClients: () => dispatch(fetchClients())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Clients));
