@@ -16,18 +16,21 @@ const styles = {
 
 const Input = (props) => {
   const { classes } = props;
-
+  const error = (props.validator && props.validationRules && props.fieldName) ? props.validator.message(props.fieldName, props.value, props.validationRules) : null
   return (
-    <TextField
-      className={classes.field}
-      label={props.label}
-      placeholder={props.placeholder || ''}
-      value={props.value}
-      onChange={props.changeHandler}
-      helperText={props.helperText || ''}
-      margin="normal"
-      variant="outlined"
-    />
+    <span>
+      <TextField
+        className={classes.field}
+        label={props.label}
+        placeholder={props.placeholder || ''}
+        value={props.value}
+        onChange={props.changeHandler}
+        error={(error) ? true : false}
+        helperText={error || props.helperText || ''}
+        margin="normal"
+        variant="outlined"
+      />
+    </span>
   )
 };
 
