@@ -150,7 +150,8 @@ class Client extends React.Component {
         state: {
           label: 'Province/State',
           value: '',
-          placeholder: 'Enter province/state|min:2|max:100'
+          placeholder: 'Enter province/state',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         country: {
           label: 'Country',
@@ -207,8 +208,7 @@ class Client extends React.Component {
           validationRules: 'required|numeric|min:4|max:20'
         }
       }
-    },
-    isError: false
+    }
   };
   validator = new SimpleReactValidator();
 
@@ -291,14 +291,14 @@ class Client extends React.Component {
         }
       };
 
-      console.log(this.validator);
+      console.log(data);
       if (this.validator.allValid()) {
         this.setState({isError: false})
         const response = await axios.post('http://172.16.6.250:8080/company/add', data);
         console.log(response);
       } else {
         this.validator.showMessages()
-        this.setState({isError: true})
+        this.forceUpdate()
       }
 
     } catch(err) {
