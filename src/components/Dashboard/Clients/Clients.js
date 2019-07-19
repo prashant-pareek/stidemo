@@ -69,9 +69,9 @@ class Clients extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    success: state.clients.success,
+    success: state.clients.clientsSuccess,
     clients: state.clients.clients,
-    error: state.clients.error
+    error: state.clients.clientsError
   };
 }
 

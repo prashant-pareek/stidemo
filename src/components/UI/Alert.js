@@ -22,11 +22,11 @@ const Alert = (props) => {
 
   let cls = null;
 
-  if (type == 'success') {
+  if (type === 'success') {
     cls = classes.alertSuccess;
   }
 
-  if (type == 'danger') {
+  if (type === 'danger') {
     cls = classes.alertDanger
   }
 

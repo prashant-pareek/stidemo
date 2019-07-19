@@ -1,19 +1,35 @@
-import { CLIENT_SUCCESS, CLIENT_FAILED } from '../actionTypes';
+import { 
+  FETCH_CLIENTS_BEGIN,
+  FETCH_CLIENTS_SUCCESS, 
+  FETCH_CLIENTS_FAILED,
+  FETCH_CLIENT_BEGIN,
+  FETCH_CLIENT_SUCCESS,
+  FETCH_CLIENT_FAILED,
+  SAVE_CLIENT_BEGIN,
+  SAVE_CLIENT_SUCCESS,
+  SAVE_CLIENT_FAILED
+} from '../actionTypes';
 import { uiStartLoading, uiStopLoading } from './loader';
 import { uiStartAlert } from './alert';
 
 import { fetchClientsAPI, fetchClientAPI, saveClientAPI } from '../../services/api';
 
-const clientsSuccess = data => {
+const fetchClientsBegin = () => {
   return {
-    type: CLIENT_SUCCESS,
+    type: FETCH_CLIENTS_BEGIN
+  };
+};
+
+const fetchClientsSuccess = data => {
+  return {
+    type: FETCH_CLIENTS_SUCCESS,
     payload: data
   };
 };
 
-const clientsFailed = error => {
+const fetchClientsFailed = error => {
   return {
-    type: CLIENT_FAILED,
+    type: FETCH_CLIENTS_FAILED,
     error: error
   };
 };
@@ -21,6 +37,7 @@ const clientsFailed = error => {
 export const fetchClients = () => {
   return async dispatch => {
     try {
+      dispatch(fetchClientsBegin());
       dispatch(uiStartLoading());
 
       const response = await fetchClientsAPI();
@@ -28,21 +45,42 @@ export const fetchClients = () => {
       dispatch(uiStopLoading());
 
       if (response.status) {
-        dispatch(clientsSuccess(response.data));
+        dispatch(fetchClientsSuccess(response.data));
       } else {
-        dispatch(clientsFailed(response.message));
+        dispatch(fetchClientsFailed(response.message));
         dispatch(uiStartAlert(response.message, 'danger'));
       }
     } catch (err) {
-      dispatch(clientsFailed(err));
+      dispatch(fetchClientsFailed(err));
       dispatch(uiStartAlert(err, 'danger'));
     }
+  };
+};
+
+const fetchClientBegin = () => {
+  return {
+    type: FETCH_CLIENT_BEGIN
+  };
+};
+
+const fetchClientSuccess = data => {
+  return {
+    type: FETCH_CLIENT_SUCCESS,
+    payload: data
+  };
+};
+
+const fetchClientFailed = error => {
+  return {
+    type: FETCH_CLIENT_FAILED,
+    error: error
   };
 };
 
 export const fetchClient = (id) => {
   return async dispatch => {
     try {
+      dispatch(fetchClientBegin());
       dispatch(uiStartLoading());
 
       const response = await fetchClientAPI(id);
@@ -50,21 +88,42 @@ export const fetchClient = (id) => {
       dispatch(uiStopLoading());
 
       if (response.status) {
-        dispatch(clientsSuccess(response.data));
+        dispatch(fetchClientSuccess(response.data));
       } else {
-        dispatch(clientsFailed(response.message));
+        dispatch(fetchClientFailed(response.message));
         dispatch(uiStartAlert(response.message, 'danger'));
       }
     } catch (err) {
-      dispatch(clientsFailed(err));
+      dispatch(fetchClientFailed(err));
       dispatch(uiStartAlert(err, 'danger'));
     }
+  };
+};
+
+const saveClientBegin = () => {
+  return {
+    type: SAVE_CLIENT_BEGIN
+  };
+};
+
+const saveClientSuccess = data => {
+  return {
+    type: SAVE_CLIENT_SUCCESS,
+    payload: data
+  };
+};
+
+const saveClientFailed = error => {
+  return {
+    type: SAVE_CLIENT_FAILED,
+    error: error
   };
 };
 
 export const saveClient = (data) => {
   return async dispatch => {
     try {
+      dispatch(saveClientBegin());
       dispatch(uiStartLoading());
 
       const response = await saveClientAPI(data);
@@ -72,14 +131,14 @@ export const saveClient = (data) => {
       dispatch(uiStopLoading());
 
       if (response.status) {
-        dispatch(clientsSuccess(response.data));
+        dispatch(saveClientSuccess(response.data));
         dispatch(uiStartAlert(response.message, 'success'));
       } else {
-        dispatch(clientsFailed(response.message));
+        dispatch(saveClientFailed(response.message));
         dispatch(uiStartAlert(response.message, 'danger'));
       }
     } catch (err) {
-      dispatch(clientsFailed(err));
+      dispatch(saveClientFailed(err));
       dispatch(uiStartAlert(err, 'danger'));
     }
   };
