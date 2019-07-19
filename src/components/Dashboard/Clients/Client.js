@@ -11,6 +11,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
+import SimpleReactValidator from 'simple-react-validator';
 import Title from '../Title';
 import Input from '../../UI/Input';
 
@@ -37,17 +38,20 @@ class Client extends React.Component {
         name: {
           label: 'Name',
           value: '',
-          placeholder: 'Enter company name'
+          placeholder: 'Enter company name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         abbrev: {
           label: 'Abbreviation',
           value: '',
-          placeholder: 'Enter company short name'
+          placeholder: 'Enter company short name',
+          validationRules: 'required|alpha|min:2|max:20'
         },
         address1: {
           label: 'Address 1',
           value: '',
-          placeholder: 'Enter address 1'
+          placeholder: 'Enter address 1',
+          validationRules: 'required|alpha'
         },
         address2: {
           label: 'Address 2',
@@ -62,39 +66,46 @@ class Client extends React.Component {
         city: {
           label: 'City',
           value: '',
-          placeholder: 'Enter city name'
+          placeholder: 'Enter city name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         state: {
           label: 'Province/State',
           value: '',
-          placeholder: 'Enter province/state'
+          placeholder: 'Enter province/state',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         country: {
           label: 'Country',
           value: '',
-          placeholder: 'Enter country name'
+          placeholder: 'Enter country name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         postal_code: {
           label: 'Postal/Zip code',
           value: '',
-          placeholder: 'Enter postal/zip code'
+          placeholder: 'Enter postal/zip code',
+          validationRules: 'required|numeric|min:4|max:20'
         }
       },
       contact: {
         firstname: {
           label: 'First Name',
           value: '',
-          placeholder: 'Enter first name'
+          placeholder: 'Enter first name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         lastname: {
           label: 'Last Name',
           value: '',
-          placeholder: 'Enter last name'
+          placeholder: 'Enter last name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         address1: {
           label: 'Address 1',
           value: '',
-          placeholder: 'Enter address 1'
+          placeholder: 'Enter address 1',
+          validationRules: 'required|alpha'
         },
         address2: {
           label: 'Address 2',
@@ -109,14 +120,16 @@ class Client extends React.Component {
         email: {
           label: 'Email',
           value: '',
-          placeholder: 'Enter email address'
+          placeholder: 'Enter email address',
+          validationRules: 'required|email'
         }
       },
       contract: {
         address1: {
           label: 'Address 1',
           value: '',
-          placeholder: 'Enter address 1'
+          placeholder: 'Enter address 1',
+          validationRules: 'required|alpha'
         },
         address2: {
           label: 'Address 2',
@@ -131,29 +144,34 @@ class Client extends React.Component {
         city: {
           label: 'City',
           value: '',
-          placeholder: 'Enter city name'
+          placeholder: 'Enter city name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         state: {
           label: 'Province/State',
           value: '',
-          placeholder: 'Enter province/state'
+          placeholder: 'Enter province/state',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         country: {
           label: 'Country',
           value: '',
-          placeholder: 'Enter country name'
+          placeholder: 'Enter country name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         postal_code: {
           label: 'Postal/Zip code',
           value: '',
-          placeholder: 'Enter postal/zip code'
+          placeholder: 'Enter postal/zip code',
+          validationRules: 'required|numeric|min:4|max:20'
         }
       },
       billing: {
         address1: {
           label: 'Address 1',
           value: '',
-          placeholder: 'Enter address 1'
+          placeholder: 'Enter address 1',
+          validationRules: 'required|alpha'
         },
         address2: {
           label: 'Address 2',
@@ -168,26 +186,31 @@ class Client extends React.Component {
         city: {
           label: 'City',
           value: '',
-          placeholder: 'Enter city name'
+          placeholder: 'Enter city name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         state: {
           label: 'Province/State',
           value: '',
-          placeholder: 'Enter province/state'
+          placeholder: 'Enter province/state',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         country: {
           label: 'Country',
           value: '',
-          placeholder: 'Enter country name'
+          placeholder: 'Enter country name',
+          validationRules: 'required|alpha|min:2|max:100'
         },
         postal_code: {
           label: 'Postal/Zip code',
           value: '',
-          placeholder: 'Enter postal/zip code'
+          placeholder: 'Enter postal/zip code',
+          validationRules: 'required|numeric|min:4|max:20'
         }
       }
     }
   };
+  validator = new SimpleReactValidator();
 
   handleChange = (event, newValue) => {
     this.setState({
@@ -269,10 +292,15 @@ class Client extends React.Component {
       };
 
       console.log(data);
+      if (this.validator.allValid()) {
+        this.setState({isError: false})
+        const response = await axios.post('http://172.16.6.250:8080/company/add', data);
+        console.log(response);
+      } else {
+        this.validator.showMessages()
+        this.forceUpdate()
+      }
 
-      const response = await axios.post('http://172.16.6.250:8080/company/add', data);
-
-      console.log(response);
     } catch(err) {
       console.log(err);
     }
@@ -286,14 +314,17 @@ class Client extends React.Component {
 
     fields = Object.keys(this.state.controls[tab]).map(key => {
       let field = this.state.controls[tab][key];
-
-      return <Input
+      return (<Input
         key={key}
         label={field.label}
         placeholder={field.placeholder}
         value={field.value}
         changeHandler={(event) => this.updateInput(event, tab, key)}
-      />
+        fieldName={field.label}
+        validator={this.validator}
+        validationRules={field.validationRules || false }
+
+      />)
     });
 
     let txt = null;
