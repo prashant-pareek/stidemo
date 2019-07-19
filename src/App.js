@@ -1,12 +1,13 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
+import Alert from './components/UI/Alert';
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
       <Dashboard />
-    </BrowserRouter>
+      <Alert />
+    </>
   );
 }
 

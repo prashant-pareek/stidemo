@@ -106,14 +106,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
   const classes = useStyles();
+  
   const [open, setOpen] = React.useState(true);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
     <div className={classes.root}>
@@ -163,6 +165,7 @@ export default function Dashboard() {
                 <Switch>
                   <Route exact path="/" component={Clients} />
                   <Route path="/clients/new" component={Client} />
+                  <Route path="/clients/:id" component={Client} />
                   <Redirect to="/" />
                 </Switch>
               </Paper>

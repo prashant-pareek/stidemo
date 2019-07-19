@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import {
   withStyles,
   createMuiTheme,
@@ -11,6 +10,8 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
+import { fetchClient, saveClient } from '../../../store/actions/clients';
+import { connect } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import Title from '../Title';
 import Input from '../../UI/Input';
@@ -33,6 +34,7 @@ const styles = {
 class Client extends React.Component {
   state = {
     value: 'details',
+    id: 0,
     controls: {
       details: {
         name: {
@@ -210,7 +212,14 @@ class Client extends React.Component {
       }
     }
   };
+
   validator = new SimpleReactValidator();
+
+  async componentDidMount() {
+    if (this.props.match.params.id) {
+      await this.props.onFetchClient(this.props.match.params.id);
+    }
+  }
 
   handleChange = (event, newValue) => {
     this.setState({
@@ -220,7 +229,7 @@ class Client extends React.Component {
 
   updateInput = (event, tab, key) => {
     const value = event.target.value;
-
+    
     this.setState(state => {
       return {
         controls: {
@@ -238,72 +247,201 @@ class Client extends React.Component {
   }
 
   submitFormHandler = async () => {
-    try {
-      /*const data = {}; 
-    
-      for (let tab in this.state.controls) {
-        data[tab] = {};
-
-        for (let field in this.state.controls[tab]) {
-          data[tab][field] = this.state.controls[tab][field].value;
+    const data = {
+      id: this.state.id,
+      companyName: this.state.controls.details.name.value,
+      abbreviation: this.state.controls.details.abbrev.value,
+      details: {
+        address1: this.state.controls.details.address1.value,
+        address2: this.state.controls.details.address2.value,
+        address3: this.state.controls.details.address3.value,
+        city: this.state.controls.details.city.value,
+        state: this.state.controls.details.state.value,
+        country: this.state.controls.details.country.value,
+        zip: this.state.controls.details.postal_code.value
+      },
+      billingAddress: {
+        address1: this.state.controls.billing.address1.value,
+        address2: this.state.controls.billing.address2.value,
+        address3: this.state.controls.billing.address3.value,
+        city: this.state.controls.billing.city.value,
+        state: this.state.controls.billing.state.value,
+        country: this.state.controls.billing.country.value,
+        zip: this.state.controls.billing.postal_code.value
+      },
+      contractAddress: {
+        address1: this.state.controls.contract.address1.value,
+        address2: this.state.controls.contract.address2.value,
+        address3: this.state.controls.contract.address3.value,
+        city: this.state.controls.contract.city.value,
+        state: this.state.controls.contract.state.value,
+        country: this.state.controls.contract.country.value,
+        zip: this.state.controls.contract.postal_code.value,
+      },
+      companyContact: {
+        firstName: this.state.controls.contact.firstname.value,
+        lastName: this.state.controls.contact.lastname.value,
+        emailId: this.state.controls.contact.email.value,
+        contactAddress: {
+          address1: this.state.controls.contact.address1.value,
+          address2: this.state.controls.contact.address2.value,
+          address3: this.state.controls.contact.address3.value
         }
-      }*/
+      }
+    };
+    
+    if (this.validator.allValid()) {
+      this.setState({isError: false});
 
-      const data = {
-        companyName: this.state.controls.details.name.value,
-        abbreviation: this.state.controls.details.abbrev.value,
-        details: {
-          address1: this.state.controls.details.address1.value,
-          address2: this.state.controls.details.address2.value,
-          address3: this.state.controls.details.address3.value,
-          city: this.state.controls.details.city.value,
-          state: this.state.controls.details.state.value,
-          country: this.state.controls.details.country.value,
-          zip: this.state.controls.details.postal_code.value
-        },
-        billingAddress: {
-          address1: this.state.controls.billing.address1.value,
-          address2: this.state.controls.billing.address2.value,
-          address3: this.state.controls.billing.address3.value,
-          city: this.state.controls.billing.city.value,
-          state: this.state.controls.billing.state.value,
-          country: this.state.controls.billing.country.value,
-          zip: this.state.controls.billing.postal_code.value
-        },
-        contractAddress: {
-          address1: this.state.controls.contract.address1.value,
-          address2: this.state.controls.contract.address2.value,
-          address3: this.state.controls.contract.address3.value,
-          city: this.state.controls.contract.city.value,
-          state: this.state.controls.contract.state.value,
-          country: this.state.controls.contract.country.value,
-          zip: this.state.controls.contract.postal_code.value,
-        },
-        companyContact: {
-          firstName: this.state.controls.contact.firstname.value,
-          lastName: this.state.controls.contact.lastname.value,
-          emailId: this.state.controls.contact.email.value,
-          contactAddress: {
-            address1: this.state.controls.contact.address1.value,
-            address2: this.state.controls.contact.address2.value,
-            address3: this.state.controls.contact.address3.value
+      await this.props.onSaveClient(data);
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.match.params) {
+      if (
+        (props.match.params.id !== undefined) &&  
+        (props.client) && 
+        (state.id !== props.client.id)
+      ) {
+        return {
+          ...state,
+          id: props.client.id,
+          controls: {
+            ...state.controls,
+            details: {
+              name: {
+                ...state.controls.details.name,
+                value: props.client.companyName || ''
+              },
+              abbrev: {
+                ...state.controls.details.abbrev,
+                value: props.client.abbreviation || ''
+              },
+              address1: {
+                ...state.controls.details.address1,
+                value: props.client.details.address1 || ''
+              },
+              address2: {
+                ...state.controls.details.address2,
+                value: props.client.details.address2 || ''
+              },
+              address3: {
+                ...state.controls.details.address3,
+                value: props.client.details.address3 || ''
+              },
+              city: {
+                ...state.controls.details.city,
+                value: props.client.details.city || ''
+              },
+              state: {
+                ...state.controls.details.state,
+                value: props.client.details.state || ''
+              },
+              country: {
+                ...state.controls.details.country,
+                value: props.client.details.country || ''
+              },
+              postal_code: {
+                ...state.controls.details.postal_code,
+                value: props.client.details.zip || ''
+              }
+            },
+            contact: {
+              firstname: {
+                ...state.controls.contact.firstname,
+                value: props.client.companyContact.firstName || ''
+              },
+              lastname: {
+                ...state.controls.contact.lastname,
+                value: props.client.companyContact.lastName || ''
+              },
+              address1: {
+                ...state.controls.contact.address1,
+                value: props.client.companyContact.contactAddress.address1 || ''
+              },
+              address2: {
+                ...state.controls.contact.address2,
+                value: props.client.companyContact.contactAddress.address2 || ''
+              },
+              address3: {
+                ...state.controls.contact.address3,
+                value: props.client.companyContact.contactAddress.address3 || ''
+              },
+              email: {
+                ...state.controls.contact.email,
+                value: props.client.companyContact.emailId || ''
+              }
+            },
+            contract: {
+              address1: {
+                ...state.controls.contract.address1,
+                value: props.client.contractAddress.address1 || ''
+              },
+              address2: {
+                ...state.controls.contract.address2,
+                value: props.client.contractAddress.address2 || ''
+              },
+              address3: {
+                ...state.controls.contract.address3,
+                value: props.client.contractAddress.address3 || ''
+              },
+              city: {
+                ...state.controls.contract.city,
+                value: props.client.contractAddress.city || ''
+              },
+              state: {
+                ...state.controls.contract.state,
+                value: props.client.contractAddress.state || ''
+              },
+              country: {
+                ...state.controls.contract.country,
+                value: props.client.contractAddress.country || ''
+              },
+              postal_code: {
+                ...state.controls.contract.postal_code,
+                value: props.client.contractAddress.zip || ''
+              }
+            },
+            billing: {
+              address1: {
+                ...state.controls.billing.address1,
+                value: props.client.billingAddress.address1 || ''
+              },
+              address2: {
+                ...state.controls.billing.address2,
+                value: props.client.billingAddress.address2 || ''
+              },
+              address3: {
+                ...state.controls.billing.address3,
+                value: props.client.billingAddress.address3 || ''
+              },
+              city: {
+                ...state.controls.billing.city,
+                value: props.client.billingAddress.city || ''
+              },
+              state: {
+                ...state.controls.billing.state,
+                value: props.client.billingAddress.state || ''
+              },
+              country: {
+                ...state.controls.billing.country,
+                value: props.client.billingAddress.country || ''
+              },
+              postal_code: {
+                ...state.controls.billing.postal_code,
+                value: props.client.billingAddress.zip || ''
+              }
+            }
           }
         }
-      };
-
-      console.log(data);
-      if (this.validator.allValid()) {
-        this.setState({isError: false})
-        const response = await axios.post('http://172.16.6.250:8080/company/add', data);
-        console.log(response);
-      } else {
-        this.validator.showMessages()
-        this.forceUpdate()
       }
-
-    } catch(err) {
-      console.log(err);
     }
+
+    return state;
   }
 
   render() {
@@ -365,4 +503,21 @@ class Client extends React.Component {
   }
 }
 
-export default withStyles(styles)(Client);
+const mapStateToProps = state => {
+  return {
+    success: state.clients.clientSuccess,
+    client: state.clients.client,
+    error: state.clients.clientError,
+    saveSuccess: state.clients.saveSuccess,
+    saveError: state.clients.saveError
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onFetchClient: id => dispatch(fetchClient(id)),
+    onSaveClient: data => dispatch(saveClient(data))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Client));
