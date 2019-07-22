@@ -6,6 +6,11 @@ export const uiStartAlert = (msg, type) => {
     dispatch(alertTimeout());
   };
 };
+export const uiEndAlert = () => {
+  return dispatch => {
+    dispatch(uiHideAlert());
+  };
+};
 
 const uiShowAlert = (msg, type) => {
   return {
