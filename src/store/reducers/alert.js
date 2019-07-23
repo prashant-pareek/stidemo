@@ -1,8 +1,8 @@
-import { ADD_ALERT, CLOSE_ALERT, REMOVE_ALERT } from '../actionTypes';
+import { ADD_ALERT, REMOVE_ALERT } from '../actionTypes';
 
-const defaultState = [];
+const initialState = [];
 
-export default (state = defaultState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
       case ADD_ALERT:
           return [
@@ -14,7 +14,6 @@ export default (state = defaultState, action) => {
           ];
       case REMOVE_ALERT:
           return state.filter( alert => alert.key !== action.key);
-
       default:
           return state;
   }

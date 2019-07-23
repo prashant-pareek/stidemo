@@ -3,11 +3,11 @@ import shortid from 'shortid'
 
 export const addAlert = alert => {
   return {
-      type: ADD_ALERT,
-      alert: {
-          ...alert,
-          key: shortid.generate(),
-      },
+    type: ADD_ALERT,
+    alert: {
+      ...alert,
+      key: shortid.generate()
+    }
   };
 };
 

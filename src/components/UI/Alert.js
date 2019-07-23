@@ -8,50 +8,46 @@ import { IconButton } from '@material-ui/core';
 
 class Alert extends Component {
   displayed = [];
-  count = 0
-
-  shouldComponentUpdate({ alerts: newSnacks = [] }) {
-      if (!newSnacks.length) {
-          this.displayed = [];
-          return false;
-      }
-      return true;
+  
+  shouldComponentUpdate({ alerts: newAlerts = [] }) {
+    if (!newAlerts.length) {
+      this.displayed = [];
+      return false;
+    }
+    return true;
   }
   
   componentDidUpdate() {
-      const { alerts = [] } = this.props;
-      alerts.forEach(({ key, message, type }) => {
-          // Do nothing if snackbar is already displayed
+    const { alerts = [] } = this.props;
+    alerts.forEach(({ key, message, type }) => {
+      // Do nothing if alert is already displayed
+      if (this.displayed.includes(key)) return;
 
-          if (this.displayed.includes(key)) return;
-          // Display snackbar using notistack
-          this.displayed.push(key);
-          this.props.enqueueSnackbar(message, {
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-              },
-              autoHideDuration: 600000,
-              key: key,
-              variant: type || 'default',
-              action: key => (
-                <IconButton key="close" aria-label="Close" color="inherit" onClick={() => {this.props.closeSnackbar(key); this.props.removeAlert(key)}}>
-                  <CloseIcon  />
-                </IconButton>
-              ),
-
-              onClose: (event, reason, key) => {
-                  // Dispatch action to remove snackbar from redux store
-                  const dIndex = this.displayed.indexOf(key);
-                  if (dIndex > -1) {
-                    this.displayed.splice(dIndex, 1);
-                  }
-                  this.props.removeAlert(key);
-              }
-          });
-          // Keep track of snackbars that we've displayed
-          
+      // Display alert using notistack
+      this.displayed.push(key);
+      this.props.enqueueSnackbar(message, {
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+        autoHideDuration: 600000,
+        key: key,
+        variant: type || 'default',
+        action: key => (
+          <IconButton key="close" aria-label="Close" color="inherit" onClick={() => {this.props.closeSnackbar(key); this.props.removeAlert(key)}}>
+            <CloseIcon  />
+          </IconButton>
+        ),
+        onClose: (event, reason, key) => {
+          // Dispatch action to remove snackbar from redux store
+          const dIndex = this.displayed.indexOf(key);
+          if (dIndex > -1) {
+            this.displayed.splice(dIndex, 1);
+          }
+          this.props.removeAlert(key);
+        }
       });
+    });
   }
 
   render() {
