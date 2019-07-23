@@ -1,30 +1,21 @@
-import { UI_SHOW_ALERT, UI_HIDE_ALERT } from '../actionTypes';
+import { ADD_ALERT, CLOSE_ALERT, REMOVE_ALERT } from '../actionTypes';
 
-const initialState = {
-  show: false,
-  type: '',
-  msg: ''
-};
+const defaultState = [];
 
-const reducer = (state = initialState, action) => {
+export default (state = defaultState, action) => {
   switch (action.type) {
-    case UI_SHOW_ALERT:
-      return {
-        ...state,
-        show: true,
-        msg: action.msg,
-        type: action.msgType || ''
-      };
-    case UI_HIDE_ALERT:
-      return {
-        ...state,
-        show: false,
-        msg: '',
-        type: ''
-      };
-    default:
-      return state;
+      case ADD_ALERT:
+          return [
+            ...state,
+            {
+              key: action.key,
+              ...action.alert,
+            }
+          ];
+      case REMOVE_ALERT:
+          return state.filter( alert => alert.key !== action.key);
+
+      default:
+          return state;
   }
 };
-
-export default reducer;

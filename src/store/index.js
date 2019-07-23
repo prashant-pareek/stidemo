@@ -7,7 +7,7 @@ import clientsReducer from './reducers/clients';
 
 const rootReducer = combineReducers({
   loader: loaderReducer,
-  alert: alertReducer,
+  alerts: alertReducer,
   clients: clientsReducer,
 });
 

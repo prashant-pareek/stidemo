@@ -1,94 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Snackbar from '@material-ui/core/Snackbar';
-import Slide from '@material-ui/core/Slide';
-import { IconButton, SnackbarContent } from '@material-ui/core';
+import { withSnackbar } from 'notistack';
+import { removeAlert } from '../../store/actions/alert';
 import CloseIcon from '@material-ui/icons/Close';
-import { withStyles } from '@material-ui/styles';
-import clsx from 'clsx';
-import { green, red, amber, blue } from '@material-ui/core/colors';
-import { uiEndAlert } from '../../store/actions/alert';
+import { IconButton } from '@material-ui/core';
 
-const styles = {
-  success: {
-    backgroundColor: green[600],
-  },
-  error: {
-    backgroundColor: red[400],
-  },
-  info: {
-    backgroundColor: blue[600]
-  },
-  warning: {
-    backgroundColor: amber[700]
-  },
-  danger: {
-    backgroundColor: red[600]
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-  }
-};
+class Alert extends Component {
+  displayed = [];
+  count = 0
 
-class Alert extends React.Component { 
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      vertical: 'top',
-      horizontal: 'right',
-    };
+  shouldComponentUpdate({ alerts: newSnacks = [] }) {
+      if (!newSnacks.length) {
+          this.displayed = [];
+          return false;
+      }
+      return true;
   }
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({open: nextProps.show });
+  
+  componentDidUpdate() {
+      const { alerts = [] } = this.props;
+      alerts.forEach(({ key, message, type }) => {
+          // Do nothing if snackbar is already displayed
+
+          if (this.displayed.includes(key)) return;
+          // Display snackbar using notistack
+          this.displayed.push(key);
+          this.props.enqueueSnackbar(message, {
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+              autoHideDuration: 600000,
+              key: key,
+              variant: type || 'default',
+              action: key => (
+                <IconButton key="close" aria-label="Close" color="inherit" onClick={() => {this.props.closeSnackbar(key); this.props.removeAlert(key)}}>
+                  <CloseIcon  />
+                </IconButton>
+              ),
+
+              onClose: (event, reason, key) => {
+                  // Dispatch action to remove snackbar from redux store
+                  const dIndex = this.displayed.indexOf(key);
+                  if (dIndex > -1) {
+                    this.displayed.splice(dIndex, 1);
+                  }
+                  this.props.removeAlert(key);
+              }
+          });
+          // Keep track of snackbars that we've displayed
+          
+      });
   }
 
-  handleClose = () => {
-    this.setState({open: false });
-    this.props.uiEndAlert();
-  }
-  render () {
-    const { classes, className, type, msg } = this.props;
-    const { vertical, horizontal, open } = this.state;
-    return (
-      <Snackbar
-        anchorOrigin={{
-          vertical: vertical,
-          horizontal: horizontal,
-        }}
-        open={open}
-        onClose={this.handleClose}
-        TransitionComponent={Slide}
-      >
-        <SnackbarContent
-          className={clsx(classes[type], className)}
-          aria-describedby="client-snackbar"
-          message={
-            <span id="client-snackbar" className={classes.message}>
-              {msg}
-            </span>
-          }
-          action={[
-            <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-              <CloseIcon className={classes.icon} />
-            </IconButton>,
-          ]}
-        />
-
-      </Snackbar>
-    )
+  render() {
+      return null;
   }
 }
 
+const mapStateToProps = store => ({
+  alerts: store.alerts,
+});
 
-const mapStateToProps = state => {
-  return {
-    show: state.alert.show,
-    type: state.alert.type,
-    msg: state.alert.msg
-  };
-}
+const mapDispatchToProps = dispatch => bindActionCreators({ removeAlert }, dispatch);
 
+export default withSnackbar(connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Alert));
 
-export default connect(mapStateToProps, {uiEndAlert})(withStyles(styles)(Alert));

@@ -22,7 +22,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems } from './listItems';
 import Clients from './Clients/Clients';
 import Client from './Clients/Client';
-import Alert from '../UI/Alert';
 
 const drawerWidth = 240;
 
@@ -107,6 +106,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
   const classes = useStyles();
+
   
   const [open, setOpen] = React.useState(true);
 
@@ -121,7 +121,6 @@ export default function Dashboard() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Alert />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
