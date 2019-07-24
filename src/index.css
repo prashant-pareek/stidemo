@@ -11,6 +11,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.MuiSnackbarContent-message {padding: 0px !important; min-width: 1000px;}
-.MuiSnackbar-anchorOriginBottomLeft{bottom: 0 !important; left: 0 !important; width: 100%;}
-.MuiPaper-root{width: 100%; border-radius: 0 !important}
+.customAlert .MuiSnackbarContent-message {padding: 0px !important; min-width: 1000px;}
+.customAlert.MuiSnackbar-anchorOriginBottomLeft{bottom: 0 !important; left: 0 !important; width: 100%;}
+.customAlert .MuiPaper-root{width: 100%; border-radius: 0 !important}

@@ -15,12 +15,12 @@ function TransitionUp(props) {
 const app = (
   <Provider store={store}>
     <BrowserRouter>
-    <SnackbarProvider 
-      maxSnack={10}
-      TransitionComponent={TransitionUp}
-    >
-      <App />
-    </SnackbarProvider>
+      <SnackbarProvider 
+        maxSnack={10}
+        TransitionComponent={TransitionUp}
+        className="customAlert">
+        <App />
+      </SnackbarProvider>
     </BrowserRouter>
   </Provider>
 );
