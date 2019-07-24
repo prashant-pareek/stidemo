@@ -36,15 +36,12 @@ class Clients extends React.Component {
 
     const options = {
       filter: true,
-      filterType: 'textField',
+      filterType: 'dropdown',
       responsive: 'stacked',
-      serverSide: true,
+      //serverSide: true,
       count: count,
       page: page,
-      print: false,
-      onTableChange: (action, tableState) => {
-        console.log(action, tableState);
-      }
+      print: false
     };
 
     return (
