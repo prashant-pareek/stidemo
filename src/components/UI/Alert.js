@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withSnackbar } from 'notistack';
 import { removeAlert } from '../../store/actions/alert';
@@ -20,6 +19,7 @@ class Alert extends Component {
   componentDidUpdate() {
     const { alerts = [] } = this.props;
     alerts.forEach(({ key, message, type }) => {
+      
       // Do nothing if alert is already displayed
       if (this.displayed.includes(key)) return;
 
@@ -30,7 +30,7 @@ class Alert extends Component {
           vertical: 'top',
           horizontal: 'right',
         },
-        autoHideDuration: 600000,
+        autoHideDuration: 6000,
         key: key,
         variant: type || 'default',
         action: key => (
@@ -39,11 +39,13 @@ class Alert extends Component {
           </IconButton>
         ),
         onClose: (event, reason, key) => {
-          // Dispatch action to remove snackbar from redux store
           const dIndex = this.displayed.indexOf(key);
+
           if (dIndex > -1) {
             this.displayed.splice(dIndex, 1);
           }
+
+          // Dispatch action to remove alert from redux store
           this.props.removeAlert(key);
         }
       });
@@ -51,7 +53,7 @@ class Alert extends Component {
   }
 
   render() {
-      return null;
+    return null;
   }
 }
 
@@ -59,7 +61,11 @@ const mapStateToProps = store => ({
   alerts: store.alerts,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ removeAlert }, dispatch);
+const mapDispatchToProps = dispatch => {
+  return {
+    removeAlert: key => dispatch(removeAlert(key))
+  };
+};
 
 export default withSnackbar(connect(
   mapStateToProps,
