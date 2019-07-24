@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core';
+import { CircularProgress, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 
 const Loader = (props) => {
   const classes = useStyles();
+
   if (props.loader && props.loader.isLoading) {
     return (
       <div className={classes.root}>
@@ -27,6 +27,7 @@ const Loader = (props) => {
   } else {
     return null
   }
+  
 };
 
 const mapStateToProps = state => ({
@@ -34,6 +35,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(
-  mapStateToProps,
-)(Loader);
+export default connect(mapStateToProps,{})(Loader);
