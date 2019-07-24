@@ -5,8 +5,8 @@ import Alert from './components/UI/Alert';
 function App() {
   return (
     <>
-      <Dashboard />
       <Alert />
+      <Dashboard />
     </>
   );
 }

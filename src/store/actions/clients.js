@@ -10,7 +10,7 @@ import {
   SAVE_CLIENT_FAILED
 } from '../actionTypes';
 import { uiStartLoading, uiStopLoading } from './loader';
-import { uiStartAlert } from './alert';
+import { addAlert } from './alert';
 
 import { fetchClientsAPI, fetchClientAPI, saveClientAPI } from '../../services/api';
 
@@ -48,11 +48,11 @@ export const fetchClients = () => {
         dispatch(fetchClientsSuccess(response.data));
       } else {
         dispatch(fetchClientsFailed(response.message));
-        dispatch(uiStartAlert(response.message, 'danger'));
+        dispatch(addAlert({message: response.message, type: 'error'}));
       }
     } catch (err) {
       dispatch(fetchClientsFailed(err));
-      dispatch(uiStartAlert(err, 'danger'));
+      dispatch(addAlert({message: err.message, type: 'error'}));
       dispatch(uiStopLoading());
     }
   };
@@ -92,11 +92,11 @@ export const fetchClient = (id) => {
         dispatch(fetchClientSuccess(response.data));
       } else {
         dispatch(fetchClientFailed(response.message));
-        dispatch(uiStartAlert(response.message, 'danger'));
+        dispatch(addAlert({message: response.message, type: 'error'}));
       }
     } catch (err) {
       dispatch(fetchClientFailed(err));
-      dispatch(uiStartAlert(err, 'danger'));
+      dispatch(addAlert({message: err.message, type: 'error'}));
       dispatch(uiStopLoading());
     }
   };
@@ -134,14 +134,14 @@ export const saveClient = (data) => {
 
       if (response.status) {
         dispatch(saveClientSuccess(response.data));
-        dispatch(uiStartAlert(response.message, 'success'));
+        dispatch(addAlert({message: response.message, type: 'success'}));
       } else {
         dispatch(saveClientFailed(response.message));
-        dispatch(uiStartAlert(response.message, 'danger'));
+        dispatch(addAlert({message: response.message, type: 'error'}));
       }
     } catch (err) {
       dispatch(saveClientFailed(err));
-      dispatch(uiStartAlert(err, 'danger'));
+      dispatch(addAlert({message: err.message, type: 'error'}));
       dispatch(uiStopLoading());
     }
   };
