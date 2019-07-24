@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withSnackbar } from 'notistack';
 import { removeAlert } from '../../store/actions/alert';
 import CloseIcon from '@material-ui/icons/Close';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Slide } from '@material-ui/core';
 
 class Alert extends Component {
   displayed = [];
