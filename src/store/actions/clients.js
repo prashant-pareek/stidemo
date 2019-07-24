@@ -53,6 +53,7 @@ export const fetchClients = () => {
     } catch (err) {
       dispatch(fetchClientsFailed(err));
       dispatch(uiStartAlert(err, 'danger'));
+      dispatch(uiStopLoading());
     }
   };
 };
@@ -96,6 +97,7 @@ export const fetchClient = (id) => {
     } catch (err) {
       dispatch(fetchClientFailed(err));
       dispatch(uiStartAlert(err, 'danger'));
+      dispatch(uiStopLoading());
     }
   };
 };
@@ -140,6 +142,7 @@ export const saveClient = (data) => {
     } catch (err) {
       dispatch(saveClientFailed(err));
       dispatch(uiStartAlert(err, 'danger'));
+      dispatch(uiStopLoading());
     }
   };
 };
