@@ -28,8 +28,8 @@ class Alert extends Component {
 
       this.props.enqueueSnackbar(message, {
         anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: 'bottom',
+          horizontal: 'left',
         },
         autoHideDuration: 6000,
         key: key,
@@ -39,6 +39,9 @@ class Alert extends Component {
             key="close" 
             aria-label="Close" 
             color="inherit" 
+            style={{
+              padding: 0
+            }}
             onClick={() => {
               this.props.closeSnackbar(key); 
               this.props.removeAlert(key)
@@ -66,8 +69,8 @@ class Alert extends Component {
   }
 }
 
-const mapStateToProps = store => ({
-  alerts: store.alerts,
+const mapStateToProps = state => ({
+  alerts: state.alerts,
 });
 
 const mapDispatchToProps = dispatch => {

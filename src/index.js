@@ -11,7 +11,9 @@ import store from './store';
 const app = (
   <Provider store={store}>
     <BrowserRouter>
-    <SnackbarProvider maxSnack={10}>
+    <SnackbarProvider 
+      maxSnack={10}
+    >
       <App />
     </SnackbarProvider>
     </BrowserRouter>
