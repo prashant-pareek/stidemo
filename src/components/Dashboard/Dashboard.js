@@ -22,6 +22,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems } from './listItems';
 import Clients from './Clients/Clients';
 import Client from './Clients/Client';
+import Loader from '../UI/Loader';
 
 const drawerWidth = 240;
 
@@ -119,6 +120,7 @@ export default function Dashboard() {
 
   return (
     <div className={classes.root}>
+      <Loader />
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
