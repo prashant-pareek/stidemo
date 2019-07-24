@@ -27,12 +27,11 @@ const Loader = (props) => {
   } else {
     return null
   }
-  
+
 };
 
 const mapStateToProps = state => ({
   loader: state.loader,
 });
-
 
 export default connect(mapStateToProps,{})(Loader);
