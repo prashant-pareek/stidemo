@@ -53,7 +53,7 @@ class Client extends React.Component {
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1',
-          validationRules: 'required|alpha'
+          validationRules: 'required|alpha_num_dash_space'
         },
         address2: {
           label: 'Address 2',
@@ -107,7 +107,7 @@ class Client extends React.Component {
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1',
-          validationRules: 'required|alpha'
+          validationRules: 'required|alpha_num_dash_space'
         },
         address2: {
           label: 'Address 2',
@@ -131,7 +131,7 @@ class Client extends React.Component {
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1',
-          validationRules: 'required|alpha'
+          validationRules: 'required|alpha_num_dash_space'
         },
         address2: {
           label: 'Address 2',
@@ -173,7 +173,7 @@ class Client extends React.Component {
           label: 'Address 1',
           value: '',
           placeholder: 'Enter address 1',
-          validationRules: 'required|alpha'
+          validationRules: 'required|alpha_num_dash_space'
         },
         address2: {
           label: 'Address 2',

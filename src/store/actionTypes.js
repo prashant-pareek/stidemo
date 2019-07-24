@@ -1,8 +1,8 @@
 export const UI_START_LOADING = 'UI_START_LOADING';
 export const UI_STOP_LOADING = 'UI_STOP_LOADING';
 
-export const UI_SHOW_ALERT = 'UI_SHOW_ALERT';
-export const UI_HIDE_ALERT = 'UI_HIDE_ALERT';
+export const ADD_ALERT = 'ADD_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
 
 export const FETCH_CLIENTS_BEGIN = 'FETCH_CLIENTS_BEGIN';
 export const FETCH_CLIENTS_SUCCESS = 'FETCH_CLIENTS_SUCCESS';
