@@ -18,13 +18,14 @@ class Alert extends Component {
   
   componentDidUpdate() {
     const { alerts = [] } = this.props;
+
     alerts.forEach(({ key, message, type }) => {
-      
       // Do nothing if alert is already displayed
       if (this.displayed.includes(key)) return;
 
       // Display alert using notistack
       this.displayed.push(key);
+
       this.props.enqueueSnackbar(message, {
         anchorOrigin: {
           vertical: 'top',
@@ -34,7 +35,15 @@ class Alert extends Component {
         key: key,
         variant: type || 'default',
         action: key => (
-          <IconButton key="close" aria-label="Close" color="inherit" onClick={() => {this.props.closeSnackbar(key); this.props.removeAlert(key)}}>
+          <IconButton 
+            key="close" 
+            aria-label="Close" 
+            color="inherit" 
+            onClick={() => {
+              this.props.closeSnackbar(key); 
+              this.props.removeAlert(key)
+            }}
+          >
             <CloseIcon  />
           </IconButton>
         ),

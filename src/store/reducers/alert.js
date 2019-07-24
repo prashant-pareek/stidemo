@@ -6,11 +6,8 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
       case ADD_ALERT:
           return [
-            ...state,
-            {
-              key: action.key,
-              ...action.alert,
-            }
+            ...state, 
+            action.alert
           ];
       case REMOVE_ALERT:
           return state.filter( alert => alert.key !== action.key);
