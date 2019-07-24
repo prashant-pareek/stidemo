@@ -3,16 +3,11 @@ import { Link } from 'react-router-dom';
 import {
   withStyles,
   createMuiTheme,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Button
 } from '@material-ui/core';
+import MUIDataTable from 'mui-datatables';
 import { fetchClients } from '../../../store/actions/clients';
 import { connect } from 'react-redux';
-import Title from '../Title';
 
 const theme = createMuiTheme();
 
@@ -29,39 +24,42 @@ class Clients extends React.Component {
 
   render() {
     const { clients, classes } = this.props;
-    let tbl = null;
+    const count = 3;
+    const page = 0;
+    const columns = ['ID', 'Company Name', 'Abbreviation'];
+
+    let data = [['Loading Data...']];
 
     if (clients) {
-      tbl = (
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Company</TableCell>
-              <TableCell align="right">Abbreviation</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {clients.map(row => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell><Link to={'/clients/'+ row.id}>{row.companyName}</Link></TableCell>
-                <TableCell align="right">{row.abbreviation}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      );
+      data = clients.map(row => [row.id, row.companyName, row.abbreviation]);
     }
+
+    const options = {
+      filter: true,
+      filterType: 'textField',
+      responsive: 'stacked',
+      serverSide: true,
+      count: count,
+      page: page,
+      print: false,
+      onTableChange: (action, tableState) => {
+        console.log(action, tableState);
+      }
+    };
+
     return (
       <>
-        <Title>Clients</Title>
         <div>
           <Link to="/clients/new">
             <Button variant="contained" color="primary" className={classes.button}>Add Client</Button>
           </Link>
         </div>
-        {tbl}
+        <MUIDataTable
+          title={'Clients List'}
+          data={data}
+          columns={columns}
+          options={options}
+        />
       </>
     );
   }

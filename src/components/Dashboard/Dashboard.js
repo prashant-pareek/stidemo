@@ -13,8 +13,7 @@ import {
   IconButton,
   Badge,
   Container,
-  Grid,
-  Paper
+  Grid
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -93,12 +92,6 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
   fixedHeight: {
     height: 240,
   },
@@ -161,14 +154,12 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Switch>
-                  <Route exact path="/" component={Clients} />
-                  <Route path="/clients/new" component={Client} />
-                  <Route path="/clients/:id" component={Client} />
-                  <Redirect to="/" />
-                </Switch>
-              </Paper>
+              <Switch>
+                <Route exact path="/" component={Clients} />
+                <Route path="/clients/new" component={Client} />
+                <Route path="/clients/:id" component={Client} />
+                <Redirect to="/" />
+              </Switch>
             </Grid>
           </Grid>
         </Container>

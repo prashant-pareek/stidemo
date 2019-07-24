@@ -4,7 +4,8 @@ import {
   createMuiTheme,
   Tab,
   Tabs,
-  Button
+  Button,
+  Paper
 } from '@material-ui/core';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
@@ -28,7 +29,13 @@ const styles = {
   },
   button: {
     marginTop: theme.spacing(2)
-  }
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
 };
 
 class Client extends React.Component {
@@ -472,33 +479,35 @@ class Client extends React.Component {
     }
 
     return (
-      <div className={classes.root}>
-        <Title>Client</Title>
-        <Tabs
-          value={this.state.value}
-          onChange={this.handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth">
-          <Tab label="Details" value="details" icon={<PhoneIcon />} />
-          <Tab label="Contact" value="contact" icon={<BookmarkIcon />} />
-          <Tab label="Contract Address" value="contract" icon={<PersonPinIcon />} />
-          <Tab label="Billing Address" value="billing" icon={<ShoppingBasket />} />
-        </Tabs>
-        <div className={classes.tabContainer}>
-          {txt}
-          {fields}
-          <div>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={this.submitFormHandler}>
-              Submit
-            </Button>
+      <Paper className={classes.paper}>
+        <div className={classes.root}>
+          <Title>Client</Title>
+          <Tabs
+            value={this.state.value}
+            onChange={this.handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth">
+            <Tab label="Details" value="details" icon={<PhoneIcon />} />
+            <Tab label="Contact" value="contact" icon={<BookmarkIcon />} />
+            <Tab label="Contract Address" value="contract" icon={<PersonPinIcon />} />
+            <Tab label="Billing Address" value="billing" icon={<ShoppingBasket />} />
+          </Tabs>
+          <div className={classes.tabContainer}>
+            {txt}
+            {fields}
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={this.submitFormHandler}>
+                Submit
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </Paper>
     )
   }
 }
