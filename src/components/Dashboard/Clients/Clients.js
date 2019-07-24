@@ -12,8 +12,14 @@ import { connect } from 'react-redux';
 const theme = createMuiTheme();
 
 const styles = {
+  btnBar: {
+    marginBottom: 14
+  },
   button: {
-    margin: theme.spacing(1)
+    marginRight: theme.spacing(1)
+  },
+  link: {
+    textDecoration: 'none'
   }
 };
 
@@ -24,14 +30,22 @@ class Clients extends React.Component {
 
   render() {
     const { clients, classes } = this.props;
-    const count = 3;
-    const page = 0;
-    const columns = ['ID', 'Company Name', 'Abbreviation'];
-
     let data = [['Loading Data...']];
+    let count = 0;
+    const page = 0;
+    const columns = ['ID', 'Company Name', 'Abbreviation', 'Action'];
 
     if (clients) {
-      data = clients.map(row => [row.id, row.companyName, row.abbreviation]);
+      data = clients.map(row => [
+        row.id, 
+        row.companyName,
+        row.abbreviation,
+        <Link to={'/clients/'+ row.id} className={classes.link}>
+          <Button variant="outlined" size="small">Edit</Button>
+        </Link>
+      ]);
+
+      count = data.length;
     }
 
     const options = {
@@ -41,14 +55,19 @@ class Clients extends React.Component {
       //serverSide: true,
       count: count,
       page: page,
-      print: false
+      print: false,
+      rowsPerPage: 3,
+      rowsPerPageOptions: [3,5,10,15]
     };
 
     return (
       <>
-        <div>
-          <Link to="/clients/new">
-            <Button variant="contained" color="primary" className={classes.button}>Add Client</Button>
+        <div className={classes.btnBar}>
+          <Link to="/clients/new" className={classes.link}>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              className={classes.button}>Add Client</Button>
           </Link>
         </div>
         <MUIDataTable
