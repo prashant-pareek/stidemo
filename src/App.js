@@ -13,7 +13,7 @@ class App extends React.Component {
 
   render() {
     let component = <Login />;
-console.log(this.props.isAuthenticated);
+
     if (this.props.isAuthenticated) {
       component = <Dashboard />;
     }

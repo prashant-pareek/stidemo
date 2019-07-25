@@ -1,35 +1,31 @@
 import React from 'react';
-import { 
-  withStyles,
-  createMuiTheme,
-  TextField 
-} from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
-const theme = createMuiTheme();
+export default (props) => {
+  const { 
+    clsName, 
+    validator, 
+    validationRules, 
+    fieldName, 
+    changeHandler, 
+    helperText, 
+    ...fields
+  } = props;
+  let error = null;
 
-const styles = {
-  field: {
-    width: '40%',
-    marginRight: theme.spacing(2)
+  if (validator && validationRules && fieldName) {
+    error = validator.message(fieldName, fields.value, validationRules);
   }
-};
 
-const Input = (props) => {
-  const { classes } = props;
-  const error = (props.validator && props.validationRules && props.fieldName) ? props.validator.message(props.fieldName, props.value, props.validationRules) : null
   return (
     <TextField
-      className={classes.field}
-      label={props.label}
-      placeholder={props.placeholder || ''}
-      value={props.value}
-      onChange={props.changeHandler}
+      {...fields}
+      className={clsName}
+      onChange={changeHandler}
       error={(error) ? true : false}
-      helperText={error || props.helperText || ''}
+      helperText={error || helperText || ''}
       margin="normal"
       variant="outlined"
     />
   )
 };
-
-export default withStyles(styles)(Input);

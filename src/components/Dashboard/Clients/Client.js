@@ -36,6 +36,10 @@ const styles = {
     overflow: 'auto',
     flexDirection: 'column',
   },
+  field: {
+    width: '40%',
+    marginRight: theme.spacing(2)
+  }
 };
 
 class Client extends React.Component {
@@ -458,17 +462,16 @@ class Client extends React.Component {
     let tab = this.state.value;
 
     fields = Object.keys(this.state.controls[tab]).map(key => {
-      let field = this.state.controls[tab][key];
+      let { validationRules, ...field } = this.state.controls[tab][key];
+
       return (<Input
+        {...field}
         key={key}
-        label={field.label}
-        placeholder={field.placeholder}
-        value={field.value}
+        clsName={classes.field}
         changeHandler={(event) => this.updateInput(event, tab, key)}
         fieldName={field.label}
         validator={this.validator}
-        validationRules={field.validationRules || false }
-
+        validationRules={validationRules || false }
       />)
     });
 

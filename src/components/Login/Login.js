@@ -5,16 +5,16 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Grid,
   Typography,
   Container
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { makeStyles } from '@material-ui/core/styles';
+import SimpleReactValidator from 'simple-react-validator';
+import { connect } from 'react-redux';
+import { login } from '../../store/actions/auth';
+import Input from '../UI/Input';
 
 const theme = createMuiTheme();
 
@@ -44,8 +44,81 @@ const styles = {
 };
 
 class Login extends React.Component {
+  state = {
+    controls: {
+      username: {
+        required: true,
+        fullWidth: true,
+        autoComplete: 'email',
+        autoFocus: true,
+        label: 'Username',
+        value: '',
+        placeholder: 'Enter username',
+        validationRules: 'required|alpha|min:2|max:100'
+      },
+      password: {
+        required: true,
+        fullWidth: true,
+        autoComplete: 'current-password',
+        label: 'Password',
+        value: '',
+        placeholder: 'Enter password',
+        type: 'password',
+        validationRules: 'required|alpha|min:2|max:20'
+      }
+    }
+  };
+
+  validator = new SimpleReactValidator();
+
+  updateInput = (event, key) => {
+    const value = event.target.value;
+    
+    this.setState(state => {
+      return {
+        controls: {
+          ...state.controls,
+          [key]: {
+            ...state.controls[key],
+            value: value
+          }
+        }
+      }
+    });
+  }
+
+  submitFormHandler = async () => {
+    const data = {
+      username: this.state.username,
+      password: this.state.password
+    };
+    
+    if (this.validator.allValid()) {
+      this.setState({isError: false});
+
+      await this.props.onSaveClient(data);
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
+  }
+
   render() {
     const { classes } = this.props;
+    let fields = null;
+
+    fields = Object.keys(this.state.controls).map(key => {
+      let { validationRules, ...field } = this.state.controls[key];
+
+      return (<Input
+        {...field}
+        key={key}
+        changeHandler={(event) => this.updateInput(event, key)}
+        fieldName={field.label}
+        validator={this.validator}
+        validationRules={validationRules || false }
+      />)
+    });
 
     return (
       <Container component="main" maxWidth="xs">
@@ -58,32 +131,7 @@ class Login extends React.Component {
             Sign in
           </Typography>
           <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            {fields}
             <Button
               type="submit"
               fullWidth
@@ -107,4 +155,10 @@ class Login extends React.Component {
   }
 }
 
-export default withStyles(styles)(Login);
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogin: data => dispatch(login(data))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(Login));
