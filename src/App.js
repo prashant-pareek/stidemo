@@ -1,4 +1,5 @@
 import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { autoLogIn } from './store/actions/auth';
 
@@ -13,15 +14,23 @@ class App extends React.Component {
 
   render() {
     let component = <Login />;
+    let routes = null;
 
     if (this.props.isAuthenticated) {
       component = <Dashboard />;
+    } else {
+      routes = (
+        <Switch>
+          <Redirect to="/" />
+        </Switch>
+      );
     }
 
     return (
       <>
         {component}
         <Alert />
+        {routes}
       </>
     );
   }
