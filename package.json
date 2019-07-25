@@ -16,7 +16,8 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.14",
-    "simple-react-validator": "^1.2.0"
+    "simple-react-validator": "^1.2.0",
+    "xlsx": "^0.14.4"
   },
   "scripts": {
     "start": "react-scripts start",

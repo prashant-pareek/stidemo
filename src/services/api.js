@@ -3,9 +3,17 @@ import * as config from '../config';
 
 export const callAPI = async (url, method, data = null) => {
   try {
-    return await axios[method](config.BASEURL + url, data);
-  } catch (err) {
-    throw err;
+    return await axios({
+      url: config.BASEURL + url,
+      method: method,
+      data: data,
+      timeout: 1000
+    });
+  } catch (error) {
+    if (error.code === 'ECONNABORTED') {
+      error.message = `Request Timeout`;
+    }
+    throw error;
   }
 }
 
