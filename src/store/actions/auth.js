@@ -68,11 +68,11 @@ export const autoLogIn = () => {
   return dispatch => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-    dispatch(loginSuccess(token, user));
-    /*if (token && user) {
+
+    if (token && user) {
       dispatch(loginSuccess(token, user)); 
     } else {
       dispatch(loginFailed());
-    }*/
+    }
   };
 };
