@@ -28,42 +28,35 @@ const styles = {
 };
 
 class Clients extends React.Component {
-  dataTable = {
-    filterList: [],
-    searchText: "",
-  }
+  dataTable = {}
   async componentDidMount() {
     await this.props.onFetchClients();
   }
-  checkFilterListIsEmpty = () => {
-    for (let i = 0; i < this.dataTable.filterList.length; i++) {
-      if (this.dataTable.filterList[i] && this.dataTable.filterList[i].length > 0) {
-        return false;
-      }
-    } 
-    return true
-  }
-  handleDownloadExcel = () => {
-    let data = this.props.clients;
 
-    if (!this.checkFilterListIsEmpty() || this.dataTable.searchText) {
-      data = data.filter((item) => {
-        const itemKeys = Object.keys(item);
-        let filter = false, textSearch = false;
-        for (let i = 0; i < itemKeys.length; i++) {
-          if (this.dataTable.filterList[i] && item[itemKeys[i]] && this.dataTable.filterList[i].indexOf(item[itemKeys[i]]) > -1) {
-            filter = true;
-          };
-          if (this.dataTable.searchText && item[itemKeys[i]] && item[itemKeys[i]].toLowerCase().indexOf(this.dataTable.searchText) > -1) {
-            textSearch = true
-          }
+  handleDownloadExcel = () => {
+    const dataTable = this.dataTable;
+    const data = [];
+    const columns = [];
+    const filterableColumnIndexs = [];
+    if (dataTable.columns && dataTable.columns.length && dataTable.displayData && dataTable.displayData.length) {
+      for (let i = 0; i < dataTable.columns.length; i++) {
+        const element = dataTable.columns[i];
+        columns.push(element.label);
+        if (element.filter) {
+          filterableColumnIndexs.push(i)
         }
-        filter = (this.checkFilterListIsEmpty() || (!this.checkFilterListIsEmpty() && filter))
-        textSearch = (!this.dataTable.searchText || (this.dataTable.searchText && textSearch))
-        return (filter && textSearch);
-      })
+      }
+      for (let i = 0; i < dataTable.displayData.length; i++) {
+        if (dataTable.displayData[i] && dataTable.displayData[i].data) {
+          const element = dataTable.displayData[i].data;
+          const item = {};
+          for (let j = 0; j < filterableColumnIndexs.length; j++) {
+            item[columns[filterableColumnIndexs[j]]] = element[filterableColumnIndexs[j]];
+          }
+          data.push(item)
+        }
+      }
     }
-    
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "People");
@@ -131,8 +124,7 @@ class Clients extends React.Component {
       },
       filter: true,
       download: false,
-      onFilterChange: (changedColumn, filterList) => {this.dataTable.filterList = filterList},
-      onSearchChange: (searchText) => {this.dataTable.searchText = searchText},
+      onTableChange: (action, tableState) => {this.dataTable = tableState},
       filterType: 'dropdown',
       responsive: 'stacked',
       //serverSide: true,

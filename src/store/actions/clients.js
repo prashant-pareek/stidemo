@@ -36,47 +36,25 @@ const fetchClientsFailed = error => {
 
 export const fetchClients = () => {
   return async dispatch => {
-    dispatch(fetchClientsSuccess([
-      {id:"1",companyName:"Metacube", abbreviation:"mt"},
-      {id:"2",companyName:"Metacube", abbreviation:"mt"},
-      {id:"3",companyName:"Metacube", abbreviation:"mt"},
-      {id:"4",companyName:"Metacube", abbreviation:"mt"},
-      {id:"5",companyName:"Metacube", abbreviation:"mt"},
-      {id:"6",companyName:"Metacube", abbreviation:"mt"},
-      {id:"7",companyName:"Metacube", abbreviation:"mt"},
-      {id:"8",companyName:"Metacube", abbreviation:"mt"},
-      {id:"9",companyName:"Metacube", abbreviation:"mt"},
-      {id:"10",companyName:"Dotsquares", abbreviation:"ds"},
-      {id:"11",companyName:"NagarroSoftwares", abbreviation:"ngro"},
-      {id:"12",companyName:"AllOnBlock", abbreviation:"aob"},
-      {id:"13",companyName:"Test", abbreviation:"ts"},
-      {id:"14",companyName:"NagarroSoftwares", abbreviation:"ngro"},
-      {id:"15",companyName:"NagarroSoftwares", abbreviation:"ngro"},
-      {id:"16",companyName:"NagarroSoftwares", abbreviation:"ngro"},
-      {id:"17",companyName:"NagarroSoftwares", abbreviation:"ngro"},
-      {id:"18",companyName:"NagarroSoftwares", abbreviation:"ngro"},
-      {id:"19",companyName:"AllOnBlock", abbreviation:"aob"},
-      {id:"20",companyName:"AllOnBlock", abbreviation:"aob"},
-    ]));
-    // try {
-    //   dispatch(fetchClientsBegin());
-    //   dispatch(uiStartLoading());
+    try {
+      dispatch(fetchClientsBegin());
+      dispatch(uiStartLoading());
 
-    //   const response = await fetchClientsAPI();
+      const response = await fetchClientsAPI();
 
-    //   dispatch(uiStopLoading());
+      dispatch(uiStopLoading());
 
-    //   if (response.status) {
-    //     dispatch(fetchClientsSuccess(response.data));
-    //   } else {
-    //     dispatch(fetchClientsFailed(response.message));
-    //     dispatch(addAlert({message: response.message, type: 'error'}));
-    //   }
-    // } catch (err) {
-    //   dispatch(fetchClientsFailed(err));
-    //   dispatch(addAlert({message: err.message, type: 'error'}));
-    //   dispatch(uiStopLoading());
-    // }
+      if (response.status) {
+        dispatch(fetchClientsSuccess(response.data));
+      } else {
+        dispatch(fetchClientsFailed(response.message));
+        dispatch(addAlert({message: response.message, type: 'error'}));
+      }
+    } catch (err) {
+      dispatch(fetchClientsFailed(err));
+      dispatch(addAlert({message: err.message, type: 'error'}));
+      dispatch(uiStopLoading());
+    }
   };
 };
 
