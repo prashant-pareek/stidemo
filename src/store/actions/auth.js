@@ -1,3 +1,4 @@
+import Keycloak from 'keycloak-js';
 import {
   LOGIN_BEGIN,
   LOGIN_SUCCESS,
@@ -63,6 +64,36 @@ export const logout = () => {
     dispatch(loginFailed());
   };
 };
+
+export const keyCloakLogin = () => {
+  return async dispatch => {
+    try {
+      dispatch(uiStartLoading());
+
+      const keycloak = Keycloak({
+        "realm": "demo",
+        "url": "http://172.16.6.250:8080/auth",
+        "ssl-required": "external",
+        "clientId": "login-app",
+        "public-client": true,
+        "verify-token-audience": true,
+        "use-resource-role-mappings": true,
+        "confidential-port": 0
+      });
+
+      keycloak.init({onLoad: 'login-required'}).success(async authenticated => {
+        if (authenticated) {
+          const userInfo = await keycloak.loadUserInfo();
+          const token = keycloak.token;
+          const user = {name: userInfo.name, email: userInfo.email, id: userInfo.sub};
+          dispatch(loginSuccess(token, user));
+        }
+      });
+    } catch(err) {
+      dispatch(addAlert({message: err.message, type: 'error'}));
+    }
+  }
+}
 
 export const autoLogIn = () => {
   return dispatch => {

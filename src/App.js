@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { autoLogIn } from './store/actions/auth';
 
-import Login from './components/Login/Login';
+import Auth from './components/Auth/Auth';
 import Dashboard from './components/Dashboard/Dashboard';
 import Alert from './components/UI/Alert';
 
@@ -13,7 +13,7 @@ class App extends React.Component {
   }
 
   render() {
-    let component = <Login />;
+    let component = <Auth />;
     let routes = null;
 
     if (this.props.isAuthenticated) {
