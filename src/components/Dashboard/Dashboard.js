@@ -1,7 +1,8 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 import {
+  withStyles,
+  createMuiTheme,
   CssBaseline,
   Drawer,
   AppBar,
@@ -12,14 +13,16 @@ import {
   Container,
   Grid
 } from '@material-ui/core';
+import { connect } from 'react-redux';
 import { mainListItems } from './listItems';
 import Clients from './Clients/Clients';
 import Client from './Clients/Client';
 import Loader from '../UI/Loader';
 
+const theme = createMuiTheme();
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   root: {
     display: 'flex',
   },
@@ -90,48 +93,66 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: {
     height: 240,
   },
-}));
+};
 
-export default function Dashboard() {
-  const classes = useStyles();
+class Dashboard extends React.Component {
+  render() {
+    const { classes, isAuthenticated } = this.props;
 
-  return (
-    <div className={classes.root}>
-      <Loader />
-      <CssBaseline />
-      <AppBar position="absolute" className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        open={false}
-      >
-        <div className={classes.toolbarIcon}></div>
-        <Divider />
-        <List>{mainListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Switch>
-                <Route exact path="/" component={Clients} />
-                <Route path="/clients/new" component={Client} />
-                <Route path="/clients/:id" component={Client} />
-                <Redirect to="/" />
-              </Switch>
+    let routes = null;
+    
+    if (isAuthenticated) {
+      routes = (
+        <Switch>
+          <Route exact path="/" component={Clients} />
+          <Route path="/clients/new" component={Client} />
+          <Route path="/clients/:id" component={Client} />
+          <Redirect to="/" />
+        </Switch>
+      );
+    }
+
+    return (
+      <div className={classes.root}>
+        <Loader />
+        <CssBaseline />
+        <AppBar position="absolute" className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          open={false}
+        >
+          <div className={classes.toolbarIcon}></div>
+          <Divider />
+          <List>{mainListItems}</List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                {routes}
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </main>
-    </div>
-  );
+          </Container>
+        </main>
+      </div>
+    );
+  }
 }
+
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null
+  };
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(Dashboard));

@@ -3,12 +3,14 @@ import thunk from 'redux-thunk';
 
 import loaderReducer from './reducers/loader';
 import alertReducer from './reducers/alert';
+import authReducer from './reducers/auth';
 import clientsReducer from './reducers/clients';
 
 const rootReducer = combineReducers({
   loader: loaderReducer,
   alerts: alertReducer,
-  clients: clientsReducer,
+  auth: authReducer,
+  clients: clientsReducer
 });
 
 const composeEnhancers =
