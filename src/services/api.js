@@ -13,13 +13,9 @@ export const callAPI = async (url = '', method = 'get', data = null, auth = true
       let token = (state.auth.token) ? state.auth.token : '';
       headers.Authorization = 'Bearer ' + token;
     }
-
-    const config = {
-      headers: headers
-    };
     
     return await axios({
-      url: config.BASEURL + url,
+      url: baseURL + url,
       method: method,
       data: data,
       timeout: 1000,
