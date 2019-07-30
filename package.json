@@ -8,6 +8,7 @@
     "axios": "^0.19.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
+    "jest": "^24.8.0",
     "mui-datatables": "^2.6.4",
     "notistack": "^0.8.9",
     "react": "^16.8.6",
