@@ -10,8 +10,9 @@ import {
 } from '@material-ui/core';
 import MUIDataTable from 'mui-datatables';
 import XLSX from 'xlsx';
-import { fetchClients } from '../../../store/actions/clients';
 import { connect } from 'react-redux';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { fetchClients } from '../../../store/actions/clients';
 
 const theme = createMuiTheme();
 
@@ -59,9 +60,24 @@ class Clients extends React.Component {
     }
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "People");
+    XLSX.utils.book_append_sheet(wb, ws, "Companies");
     XLSX.writeFile(wb, "company_list.xlsx");
   }
+
+  getMuiTheme = () => createMuiTheme({
+    overrides: {
+      MUIDataTableHeadCell: {
+        data:{
+          paddingLeft: '10px'
+        },
+        sortAction: {
+          position: 'absolute',
+          left: '0px',
+          top: '20px'
+        }
+      }
+    }
+  }) 
 
   render() {
     const { clients, classes } = this.props;
@@ -145,12 +161,14 @@ class Clients extends React.Component {
               className={classes.button}>Add Client</Button>
           </Link>
         </div>
-        <MUIDataTable
-          title={'Clients List'}
-          data={data}
-          columns={columns}
-          options={options}
-        />
+        <MuiThemeProvider theme={this.getMuiTheme()}>
+          <MUIDataTable
+            title={'Clients List'}
+            data={data}
+            columns={columns}
+            options={options}
+          />
+        </MuiThemeProvider>
       </>
     );
   }
