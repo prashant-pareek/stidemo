@@ -17,10 +17,20 @@ export const callAPI = async (url = '', method = 'get', data = null, auth = true
     const config = {
       headers: headers
     };
+    
+    return await axios({
+      url: config.BASEURL + url,
+      method: method,
+      data: data,
+      timeout: 1000,
+      headers
+    });
 
-    return await axios[method](baseURL + url, data, config);
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    if (error.code === 'ECONNABORTED') {
+      error.message = `Request Timeout`;
+    }
+    throw error;
   }
 };
 
