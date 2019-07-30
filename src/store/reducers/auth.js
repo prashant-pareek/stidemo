@@ -16,7 +16,10 @@ const reducer = (state = initialState, action) => {
         user: action.user
       };
     case LOGIN_FAILED:
-      return initialState;
+      return {
+        token: null,
+        user: null
+      }
     default:
       return state;
   }

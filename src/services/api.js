@@ -1,15 +1,30 @@
 import axios from 'axios';
-import * as config from '../config';
+import store from '../store';
 
-export const callAPI = async (url, method, data = null) => {
+const baseURL = process.env.REACT_APP_API_URL;
+
+export const callAPI = async (url = '', method = 'get', data = null, auth = true) => {
   try {
-    return await axios[method](config.BASEURL + url, data);
+    const headers = {};
+
+    if (auth) {
+      const state = store.getState();
+
+      let token = (state.auth.token) ? state.auth.token : '';
+      headers.Authorization = 'Bearer ' + token;
+    }
+
+    const config = {
+      headers: headers
+    };
+
+    return await axios[method](baseURL + url, data, config);
   } catch (err) {
     throw err;
   }
-}
+};
 
-export const loginAPI = data => callAPI('auth', 'post', data);
-export const fetchClientsAPI = () => callAPI('companys', 'get');
-export const fetchClientAPI = id => callAPI('company/'+id, 'get');
+export const loginAPI = data => callAPI('auth', 'post', data, null, false);
+export const fetchClientsAPI = () => callAPI('companys');
+export const fetchClientAPI = id => callAPI('company/'+id);
 export const saveClientAPI = data => callAPI('company/add', 'post', data);
