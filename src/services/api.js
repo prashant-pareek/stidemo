@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '../store';
 
-const baseURL = process.env.REACT_APP_API_URL;
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 export const callAPI = async (url = '', method = 'get', data = null, auth = true) => {
   try {
@@ -13,7 +13,7 @@ export const callAPI = async (url = '', method = 'get', data = null, auth = true
       let token = (state.auth.token) ? state.auth.token : '';
       headers.Authorization = 'Bearer ' + token;
     }
-    
+
     return await axios({
       url: baseURL + url,
       method: method,
@@ -21,7 +21,6 @@ export const callAPI = async (url = '', method = 'get', data = null, auth = true
       timeout: 1000,
       headers
     });
-
   } catch (error) {
     if (error.code === 'ECONNABORTED') {
       error.message = `Request Timeout`;

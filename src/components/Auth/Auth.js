@@ -9,7 +9,8 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { connect } from 'react-redux';
-import { keyCloakLogin } from '../../store/actions/auth';
+import Keycloak from 'keycloak-js';
+import { saveAuth } from '../../store/actions/auth';
 
 const theme = createMuiTheme();
 
@@ -35,9 +36,38 @@ const styles = {
 };
 
 class Auth extends React.Component {
+  state = {
+    auth: false
+  }
+
+  componentDidUpdate() {
+    console.log('asdf', this.state.auth);
+    if (this.state.auth) {
+      const keycloak = Keycloak({
+        "realm": process.env.REACT_APP_KC_REALM,
+        "url": process.env.REACT_APP_KC_URL,
+        "ssl-required": process.env.REACT_APP_KC_SSL_REQUIRED,
+        "clientId": process.env.REACT_APP_KC_CLIENT_ID,
+        "public-client": process.env.REACT_APP_KC_PUBLIC_CLIENT,
+        "verify-token-audience": process.env.REACT_APP_KC_VERIFY_TOKEN_AUDIENCE,
+        "credentials": {
+          "secret": "9dd38546-65fe-4f8d-a49a-fd2c68f72789"
+        },
+        "use-resource-role-mappings": process.env.REACT_APP_KC_USE_RESOURCE_ROLE_MAPPINGS,
+        "confidential-port": process.env.REACT_APP_KC_CONFIDENTIAL_PORT
+      });
+  
+      keycloak.init({onLoad: 'login-required'}).success(() => {
+        this.props.saveAuth(keycloak);
+        this.setState({auth: false});
+        console.log('yes');
+      });
+    }
+  }
 
   authClickHandler = () => {
-    this.props.onLogin();
+    this.setState({auth: true});
+    console.log('tes');
   }
 
   render() {
@@ -69,7 +99,7 @@ class Auth extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: data => dispatch(keyCloakLogin(data))
+    saveAuth: kc => dispatch(saveAuth(kc))
   };
 };
 

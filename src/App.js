@@ -1,16 +1,16 @@
 import React from 'react';
-import Keycloak from 'keycloak-js';
 import { connect } from 'react-redux';
 import { saveAuth, autoLogIn } from './store/actions/auth';
 
 import Dashboard from './components/Dashboard/Dashboard';
+import Auth from './components/Auth/Auth';
 import Alert from './components/UI/Alert';
 
 class App extends React.Component {
   componentDidMount() {
     this.props.onAutoLogIn();
 
-    if (!this.props.isAuthenticated) {
+    /*if (!this.props.isAuthenticated) {
       const keycloak = Keycloak({
         "realm": "demo",
         "url": "http://172.16.6.250:8080/auth",
@@ -25,13 +25,13 @@ class App extends React.Component {
       keycloak.init({onLoad: 'login-required'}).success(authenticated => {
         this.props.saveAuth(keycloak);
       });
-    }
+    }*/
   }
 
   render() {
     return (
       <>
-        {(this.props.isAuthenticated) ? <Dashboard /> : <div>Authenticating...</div>}
+        {(this.props.isAuthenticated) ? <Dashboard /> : <Auth />}
         <Alert />
       </>
     );
