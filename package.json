@@ -10,6 +10,7 @@
     "enzyme-adapter-react-16": "^1.14.0",
     "jest": "^24.8.0",
     "jest-resolve": "^24.8.0",
+    "keycloak-js": "^6.0.1",
     "mui-datatables": "^2.6.4",
     "notistack": "^0.8.9",
     "react": "^16.8.6",
@@ -21,7 +22,8 @@
     "redux-mock-store": "^1.5.3",
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.14",
-    "simple-react-validator": "^1.2.2"
+    "simple-react-validator": "^1.2.2",
+    "xlsx": "^0.14.4"
   },
   "scripts": {
     "start": "react-scripts start",

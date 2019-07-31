@@ -64,6 +64,17 @@ export const logout = () => {
   };
 };
 
+export const saveAuth = kc => {
+  return async dispatch => {
+    kc.loadUserInfo().success(user => {
+      const token = kc.token;
+      user.id = user.sub;
+
+      dispatch(loginSuccess(token, user));
+    });
+  }
+}
+
 export const autoLogIn = () => {
   return dispatch => {
     const token = localStorage.getItem('token');
