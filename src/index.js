@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import store from './store';
 import { Slide } from '@material-ui/core';
+
 function TransitionUp(props) {
   return <Slide {...props} direction="up" />;
 }

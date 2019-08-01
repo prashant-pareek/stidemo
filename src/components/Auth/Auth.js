@@ -8,9 +8,7 @@ import {
   Button
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { connect } from 'react-redux';
-import Keycloak from 'keycloak-js';
-import { saveAuth } from '../../store/actions/auth';
+import AuthInit from './AuthInit';
 
 const theme = createMuiTheme();
 
@@ -36,42 +34,25 @@ const styles = {
 };
 
 class Auth extends React.Component {
+  
   state = {
     auth: false
-  }
+  };
 
-  componentDidUpdate() {
-    console.log('asdf', this.state.auth);
-    if (this.state.auth) {
-      const keycloak = Keycloak({
-        "realm": process.env.REACT_APP_KC_REALM,
-        "url": process.env.REACT_APP_KC_URL,
-        "ssl-required": process.env.REACT_APP_KC_SSL_REQUIRED,
-        "clientId": process.env.REACT_APP_KC_CLIENT_ID,
-        "public-client": process.env.REACT_APP_KC_PUBLIC_CLIENT,
-        "verify-token-audience": process.env.REACT_APP_KC_VERIFY_TOKEN_AUDIENCE,
-        "credentials": {
-          "secret": "9dd38546-65fe-4f8d-a49a-fd2c68f72789"
-        },
-        "use-resource-role-mappings": process.env.REACT_APP_KC_USE_RESOURCE_ROLE_MAPPINGS,
-        "confidential-port": process.env.REACT_APP_KC_CONFIDENTIAL_PORT
-      });
-  
-      keycloak.init({onLoad: 'login-required'}).success(() => {
-        this.props.saveAuth(keycloak);
-        this.setState({auth: false});
-        console.log('yes');
-      });
-    }
-  }
-
-  authClickHandler = () => {
-    this.setState({auth: true});
-    console.log('tes');
+  authHandler = () => {
+    this.setState({
+      auth: true
+    });
   }
 
   render() {
     const { classes } = this.props;
+
+    let authInit = null;
+
+    if (this.state.auth) {
+      authInit = <AuthInit />
+    }
 
     return (
       <Container component="main" maxWidth="xs">
@@ -87,20 +68,15 @@ class Auth extends React.Component {
             variant="outlined"
             color="primary"
             className={classes.authBtn}
-            onClick={this.authClickHandler}
+            onClick={this.authHandler}
           >
             Authenticate
           </Button>
+          {authInit}
         </div>
       </Container>
     )
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    saveAuth: kc => dispatch(saveAuth(kc))
-  };
-};
-
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Auth));
+export default withStyles(styles)(Auth);
