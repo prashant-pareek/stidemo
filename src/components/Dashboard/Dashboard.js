@@ -11,6 +11,7 @@ import {
   Typography,
   Divider,
   Container,
+  IconButton,
   Grid
 } from '@material-ui/core';
 import { connect } from 'react-redux';
@@ -18,6 +19,8 @@ import { mainListItems } from './listItems';
 import Clients from './Clients/Clients';
 import Client from './Clients/Client';
 import Loader from '../UI/Loader';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { logout, saveAuth } from '../../store/actions/auth';
 
 const theme = createMuiTheme();
 const drawerWidth = 240;
@@ -121,6 +124,9 @@ class Dashboard extends React.Component {
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
               Dashboard
             </Typography>
+            <IconButton color="inherit" onClick={this.props.onLogout}>
+              <ExitToAppIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -155,4 +161,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(Dashboard));
+const mapDispatchToProps = dispatch => {
+  return {
+    saveAuth: kc => dispatch(saveAuth(kc)),
+    onLogout: () => dispatch(logout())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dashboard));

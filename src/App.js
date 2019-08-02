@@ -7,6 +7,10 @@ import Auth from './components/Auth/Auth';
 import Alert from './components/UI/Alert';
 
 class App extends React.Component {
+  componentDidMount() {
+    this.props.onAutoLogIn();
+  }
+
   render() {
     return (
       <>

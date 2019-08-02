@@ -8,6 +8,7 @@ import {
   Button
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { withRouter } from 'react-router-dom';
 import AuthInit from './AuthInit';
 
 const theme = createMuiTheme();
@@ -34,23 +35,16 @@ const styles = {
 };
 
 class Auth extends React.Component {
-  
-  state = {
-    auth: false
-  };
-
   authHandler = () => {
-    this.setState({
-      auth: true
-    });
+    this.props.history.push('/?auth=1');
   }
 
   render() {
     const { classes } = this.props;
 
     let authInit = null;
-
-    if (this.state.auth) {
+    
+    if (this.props.location.search === '?auth=1') {
       authInit = <AuthInit />
     }
 
@@ -79,4 +73,4 @@ class Auth extends React.Component {
   }
 }
 
-export default withStyles(styles)(Auth);
+export default withStyles(styles)(withRouter(Auth));
