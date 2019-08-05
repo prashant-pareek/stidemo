@@ -11,10 +11,15 @@ export default (props) => {
     helperText, 
     ...fields
   } = props;
+
   let error = null;
 
   if (validator && validationRules && fieldName) {
-    error = validator.message(fieldName, fields.value, validationRules);
+    const errorMsg = validator.message(fieldName, fields.value, validationRules);
+    
+    if (errorMsg) {
+      error = errorMsg.props.children;
+    }
   }
 
   return (
