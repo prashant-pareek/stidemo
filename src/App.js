@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { autoLogIn } from './store/actions/auth';
+import { autoLogIn } from './store/actions';
 
 import Dashboard from './components/Dashboard/Dashboard';
 import Auth from './components/Auth/Auth';

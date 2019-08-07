@@ -12,7 +12,7 @@ import MUIDataTable from 'mui-datatables';
 import XLSX from 'xlsx';
 import { connect } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-import { fetchClients } from '../../../store/actions/clients';
+import { fetchClients } from '../../../store/actions';
 
 const theme = createMuiTheme();
 

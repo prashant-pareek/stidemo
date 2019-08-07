@@ -20,7 +20,7 @@ import Clients from './Clients/Clients';
 import Client from './Clients/Client';
 import Loader from '../UI/Loader';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { logout, saveAuth } from '../../store/actions/auth';
+import { logout } from '../../store/actions';
 
 const theme = createMuiTheme();
 const drawerWidth = 240;
@@ -163,7 +163,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    saveAuth: kc => dispatch(saveAuth(kc)),
     onLogout: () => dispatch(logout())
   };
 };

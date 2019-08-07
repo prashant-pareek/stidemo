@@ -1,3 +1,4 @@
+import keycloak from '../../services/keycloak';
 import {
   LOGIN_BEGIN,
   LOGIN_SUCCESS,
@@ -60,6 +61,10 @@ export const login = data => {
 
 export const logout = () => {
   return dispatch => {
+    keycloak.init().success(authenticated => {
+      keycloak.logout();
+    });
+
     dispatch(loginFailed());
   };
 };

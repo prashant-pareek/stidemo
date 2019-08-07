@@ -13,7 +13,7 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import SimpleReactValidator from 'simple-react-validator';
 import { connect } from 'react-redux';
-import { login } from '../../store/actions/auth';
+import { login } from '../../store/actions';
 import Input from '../UI/Input';
 
 const theme = createMuiTheme();

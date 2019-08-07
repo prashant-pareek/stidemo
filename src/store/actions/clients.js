@@ -41,7 +41,7 @@ export const fetchClients = () => {
       dispatch(uiStartLoading());
 
       const response = await fetchClientsAPI();
-console.log(response);
+      
       dispatch(uiStopLoading());
 
       if (response.status) {

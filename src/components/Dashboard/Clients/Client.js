@@ -11,7 +11,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import { fetchClient, saveClient } from '../../../store/actions/clients';
+import { fetchClient, saveClient } from '../../../store/actions';
 import { connect } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import Title from '../Title';
