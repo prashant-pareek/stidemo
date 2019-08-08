@@ -120,7 +120,7 @@ class Clients extends React.Component {
         row.id, 
         row.companyName,
         row.abbreviation,
-        <Link to={'/clients/'+ row.id} className={classes.link}>
+        <Link to={'/dashboard/clients/'+ row.id} className={classes.link}>
           <Button variant="outlined" size="small">Edit</Button>
         </Link>
       ]);
@@ -154,7 +154,7 @@ class Clients extends React.Component {
     return (
       <>
         <div className={classes.btnBar}>
-          <Link to="/clients/new" className={classes.link}>
+          <Link to="/dashboard/clients/new" className={classes.link}>
             <Button 
               variant="contained" 
               color="primary" 

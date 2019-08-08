@@ -9,7 +9,7 @@ import PeopleIcon from '@material-ui/icons/People';
 
 export const mainListItems = (
   <div>
-    <Link to="/" style={{textDecoration: 'none'}}>
+    <Link to="/dashboard" style={{textDecoration: 'none'}}>
       <ListItem button>
         <ListItemIcon>
           <PeopleIcon />

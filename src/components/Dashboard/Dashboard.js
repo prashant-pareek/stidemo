@@ -107,10 +107,10 @@ class Dashboard extends React.Component {
     if (isAuthenticated) {
       routes = (
         <Switch>
-          <Route exact path="/" component={Clients} />
-          <Route path="/clients/new" component={Client} />
-          <Route path="/clients/:id" component={Client} />
-          <Redirect to="/" />
+          <Route path="/dashboard" exact component={Clients} />
+          <Route path="/dashboard/clients/new" component={Client} />
+          <Route path="/dashboard/clients/:id" component={Client} />
+          <Redirect to="/dashboard" />
         </Switch>
       );
     }

@@ -9,7 +9,7 @@ class AuthInit extends React.Component {
     keycloak.init({onLoad: 'login-required'}).success(authenticated => {
       if (authenticated) {
         this.props.saveAuth(keycloak);
-        this.props.history.push('/');
+        this.props.history.push('/dashboard');
       }
     })
   }
