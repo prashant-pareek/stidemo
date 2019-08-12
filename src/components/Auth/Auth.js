@@ -36,6 +36,8 @@ const styles = {
 
 class Auth extends React.Component {
   authHandler = () => {
+    // on auth button click, append auth 
+    // query parameter to current url
     this.props.history.push('/?auth=1');
   }
 
@@ -44,6 +46,8 @@ class Auth extends React.Component {
 
     let authInit = null;
     
+    // if auth parameter found in current url
+    // load authinit component to initialize keycloak authentication
     if (this.props.location.search === '?auth=1') {
       authInit = <AuthInit />
     }

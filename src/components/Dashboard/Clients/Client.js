@@ -5,13 +5,15 @@ import {
   Tab,
   Tabs,
   Button,
-  Paper
+  Paper,
+  Typography,
+  Box
 } from '@material-ui/core';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import { fetchClient, saveClient } from '../../../store/actions';
+import { fetchClient, saveClient, addAlert } from '../../../store/actions';
 import { connect } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import Title from '../Title';
@@ -42,6 +44,33 @@ const styles = {
   }
 };
 
+const TabPanel = (props) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {children}
+    </Typography>
+  );
+}
+
+const a11yProps = (index) => {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+/**
+ * Client component to add or update client data
+ */
 class Client extends React.Component {
   state = {
     value: 'details',
@@ -224,20 +253,26 @@ class Client extends React.Component {
     }
   };
 
+  // initialize form field validator
   validator = new SimpleReactValidator();
 
   async componentDidMount() {
+    // if client id passed in current url
+    // fetch client data by id
     if (this.props.match.params.id) {
       await this.props.onFetchClient(this.props.match.params.id);
     }
   }
 
+  // handler to switch tabs
   handleChange = (event, newValue) => {
     this.setState({
       value: newValue
     });
   }
 
+  // method to set value of fields
+  // as entered by user
   updateInput = (event, tab, key) => {
     const value = event.target.value;
     
@@ -257,6 +292,7 @@ class Client extends React.Component {
     });
   }
 
+  // method to save data on backend
   submitFormHandler = async () => {
     const data = {
       id: this.state.id,
@@ -300,18 +336,23 @@ class Client extends React.Component {
         }
       }
     };
-    
+
+    // check if all fields are validated
     if (this.validator.allValid()) {
       this.setState({isError: false});
 
       await this.props.onSaveClient(data);
     } else {
+      // on validation failure show error messages
       this.validator.showMessages();
       this.forceUpdate();
+      this.props.onAddAlert('Fill all required fields in all tabs', 'warning');
     }
   }
 
   static getDerivedStateFromProps(props, state) {
+    // if client data fetched in case
+    // client id exists in current url
     if (props.match.params) {
       if (
         (props.match.params.id !== undefined) &&  
@@ -458,21 +499,23 @@ class Client extends React.Component {
   render() {
     const { classes } = this.props;
 
-    let fields = null;
-    let tab = this.state.value;
+    // create fields array
+    const tabs = Object.keys(this.state.controls).map((tab, indx) => {
+      let fields = Object.keys(this.state.controls[tab]).map(key => {
+        let { validationRules, ...field } = this.state.controls[tab][key];
+  
+        return (<Input
+          {...field}
+          key={key}
+          clsName={classes.field}
+          changeHandler={(event) => this.updateInput(event, tab, key)}
+          fieldName={field.label}
+          validator={this.validator}
+          validationRules={validationRules || false }
+        />)
+      });
 
-    fields = Object.keys(this.state.controls[tab]).map(key => {
-      let { validationRules, ...field } = this.state.controls[tab][key];
-
-      return (<Input
-        {...field}
-        key={key}
-        clsName={classes.field}
-        changeHandler={(event) => this.updateInput(event, tab, key)}
-        fieldName={field.label}
-        validator={this.validator}
-        validationRules={validationRules || false }
-      />)
+      return <TabPanel value={this.state.value} key={tab} index={tab}>{fields}</TabPanel>;
     });
 
     let txt = null;
@@ -491,14 +534,14 @@ class Client extends React.Component {
             indicatorColor="primary"
             textColor="primary"
             variant="fullWidth">
-            <Tab label="Details" value="details" icon={<PhoneIcon />} />
-            <Tab label="Contact" value="contact" icon={<BookmarkIcon />} />
-            <Tab label="Contract Address" value="contract" icon={<PersonPinIcon />} />
-            <Tab label="Billing Address" value="billing" icon={<ShoppingBasket />} />
-          </Tabs>
+            <Tab label="Details" value="details" icon={<PhoneIcon />} {...a11yProps('details')} />
+            <Tab label="Contact" value="contact" icon={<BookmarkIcon />} {...a11yProps('contact')} />
+            <Tab label="Contract Address" value="contract" icon={<PersonPinIcon />} {...a11yProps('contract')} />
+            <Tab label="Billing Address" value="billing" icon={<ShoppingBasket />} {...a11yProps('billing')} />
+          </Tabs>          
           <div className={classes.tabContainer}>
             {txt}
-            {fields}
+            {tabs}
             <div>
               <Button
                 variant="contained"
@@ -528,7 +571,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onFetchClient: id => dispatch(fetchClient(id)),
-    onSaveClient: data => dispatch(saveClient(data))
+    onSaveClient: data => dispatch(saveClient(data)),
+    onAddAlert: (message, type) => dispatch(addAlert(message, type))
   };
 };
 

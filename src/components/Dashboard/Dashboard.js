@@ -15,6 +15,8 @@ import {
   Grid
 } from '@material-ui/core';
 import { connect } from 'react-redux';
+
+// menu items of sidebar
 import { mainListItems } from './listItems';
 import Clients from './Clients/Clients';
 import Client from './Clients/Client';
@@ -104,6 +106,7 @@ class Dashboard extends React.Component {
 
     let routes = null;
     
+    // if user is authenticated create routes to load component
     if (isAuthenticated) {
       routes = (
         <Switch>

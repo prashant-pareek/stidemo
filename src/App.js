@@ -3,13 +3,14 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { autoLogIn } from './store/actions';
 
+// components import
 import Dashboard from './components/Dashboard/Dashboard';
 import Auth from './components/Auth/Auth';
 import Alert from './components/UI/Alert';
 
 class App extends React.Component {
-  componentDidMount() {
-    this.props.onAutoLogIn();
+  async componentDidMount() {
+    await this.props.onAutoLogIn();
   }
 
   render() {
@@ -20,6 +21,7 @@ class App extends React.Component {
       </Switch>
     );;
     
+    // if user logged-in render dashboard
     if (this.props.isAuthenticated) {
       routes = (
         <Switch>

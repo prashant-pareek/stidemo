@@ -1,14 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import keycloak from '../../services/keycloak';
 import { saveAuth } from '../../store/actions';
+
+// load keycloak configured object
+import keycloak from '../../services/keycloak';
 
 class AuthInit extends React.Component {
   componentDidMount() {
+    // initialize keycloak authentication
     keycloak.init({onLoad: 'login-required'}).success(authenticated => {
       if (authenticated) {
+        // save token and user to localstorage and global state
         this.props.saveAuth(keycloak);
+
+        // redirect to dashboard page
         this.props.history.push('/dashboard');
       }
     })

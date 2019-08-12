@@ -1,11 +1,13 @@
 import { ADD_ALERT, REMOVE_ALERT } from '../actionTypes';
-import shortid from 'shortid'
+import shortid from 'shortid';
 
-export const addAlert = alert => {
+// append alert message object
+export const addAlert = (message, type) => {
   return {
     type: ADD_ALERT,
     alert: {
-      ...alert,
+      message,
+      type,
       key: shortid.generate()
     }
   };
@@ -13,6 +15,6 @@ export const addAlert = alert => {
 
 export const removeAlert = key => ({
   type: REMOVE_ALERT,
-  key,
+  key
 });
 

@@ -1,11 +1,13 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
+// import reducers
 import loaderReducer from './reducers/loader';
 import alertReducer from './reducers/alert';
 import authReducer from './reducers/auth';
 import clientsReducer from './reducers/clients';
 
+// create reducer object
 const rootReducer = combineReducers({
   loader: loaderReducer,
   alerts: alertReducer,
@@ -20,6 +22,7 @@ const composeEnhancers =
       // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
     }) : compose;
 
+// configure store
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
 export default store;

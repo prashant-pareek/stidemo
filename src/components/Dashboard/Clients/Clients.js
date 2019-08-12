@@ -29,16 +29,22 @@ const styles = {
 };
 
 class Clients extends React.Component {
-  dataTable = {}
+  dataTable = {};
+
   async componentDidMount() {
+    // fetch clients data
     await this.props.onFetchClients();
   }
 
+  /**
+   * method to configure and download excel sheet of records
+   */
   handleDownloadExcel = () => {
     const dataTable = this.dataTable;
     const data = [];
     const columns = [];
     const filterableColumnIndexs = [];
+
     if (dataTable.columns && dataTable.columns.length && dataTable.displayData && dataTable.displayData.length) {
       for (let i = 0; i < dataTable.columns.length; i++) {
         const element = dataTable.columns[i];
@@ -47,6 +53,7 @@ class Clients extends React.Component {
           filterableColumnIndexs.push(i)
         }
       }
+
       for (let i = 0; i < dataTable.displayData.length; i++) {
         if (dataTable.displayData[i] && dataTable.displayData[i].data) {
           const element = dataTable.displayData[i].data;
@@ -58,12 +65,15 @@ class Clients extends React.Component {
         }
       }
     }
+
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Companies");
-    XLSX.writeFile(wb, "company_list.xlsx");
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Companies');
+    XLSX.writeFile(wb, 'company_list.xlsx');
   }
 
+  // style overrides for data-tables
   getMuiTheme = () => createMuiTheme({
     overrides: {
       MUIDataTableHeadCell: {
@@ -77,37 +87,39 @@ class Clients extends React.Component {
         }
       }
     }
-  }) 
+  });
 
   render() {
     const { clients, classes } = this.props;
     let data = [['Loading Data...']];
     let count = 0;
     const page = 0;
+
+    // columns object for data-tables
     const columns = [
       {
-        name: "ID",
+        name: 'ID',
         options: {
           filter: true,
           sort: true
         }
       },
       {
-        name: "Company Name",
+        name: 'Company Name',
         options: {
           filter: true,
           sort: true
         }
       },
       {
-        name: "Abbreviation",
+        name: 'Abbreviation',
         options: {
           filter: true,
           sort: true
         }
       },
       {
-        name: "Action",
+        name: 'Action',
         options: {
           filter: false,
           sort: false
@@ -116,6 +128,7 @@ class Clients extends React.Component {
     ];
 
     if (clients) {
+      // create records object to render in data-table
       data = clients.map(row => [
         row.id, 
         row.companyName,
@@ -125,9 +138,11 @@ class Clients extends React.Component {
         </Link>
       ]);
 
+      // total no of records
       count = data.length;
     }
 
+    // configuration for data-table
     const options = {
       customToolbar: () => {
         return (

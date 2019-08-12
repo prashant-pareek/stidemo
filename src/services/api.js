@@ -3,6 +3,13 @@ import store from '../store';
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
+/**
+ * 
+ * @param {string} url endpoint url to attach with base url
+ * @param {string} method method to call rest api: get, post, put
+ * @param {object} data object to be send with rest api as post data
+ * @param {boolean} auth if true jwt token will be attached to authentication header
+ */
 export const callAPI = async (url = '', method = 'get', data = null, auth = true) => {
   try {
     const headers = {};
@@ -29,6 +36,7 @@ export const callAPI = async (url = '', method = 'get', data = null, auth = true
   }
 };
 
+// define rest api function with parameters
 export const loginAPI = data => callAPI('auth', 'post', data, null, false);
 export const fetchClientsAPI = () => callAPI('companys');
 export const fetchClientAPI = id => callAPI('company/'+id);

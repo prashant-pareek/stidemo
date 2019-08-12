@@ -14,6 +14,7 @@ export default (props) => {
 
   let error = null;
 
+  // if validator props has value create error message
   if (validator && validationRules && fieldName) {
     const errorMsg = validator.message(fieldName, fields.value, validationRules);
     

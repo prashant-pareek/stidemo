@@ -35,6 +35,7 @@ const loginFailed = () => {
   };
 };
 
+// action method to call login api
 export const login = data => {
   return async dispatch => {
     try {
@@ -49,11 +50,11 @@ export const login = data => {
         dispatch(loginSuccess(response.data));
       } else {
         dispatch(loginFailed(response.message));
-        dispatch(addAlert({message: response.message, type: 'error'}));
+        dispatch(addAlert(response.message, 'error'));
       }
     } catch(err) {
       dispatch(loginFailed(err));
-      dispatch(addAlert({message: err.message, type: 'error'}));
+      dispatch(addAlert(err.message, 'error'));
       dispatch(uiStopLoading());
     }
   };
@@ -69,6 +70,7 @@ export const logout = () => {
   };
 };
 
+// save user and token to state
 export const saveAuth = kc => {
   return async dispatch => {
     kc.loadUserInfo().success(user => {
@@ -80,6 +82,8 @@ export const saveAuth = kc => {
   }
 }
 
+// method to load token and authenticated user
+// object from localstorage to state
 export const autoLogIn = () => {
   return dispatch => {
     const token = localStorage.getItem('token');

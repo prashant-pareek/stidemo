@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// loader to show action progress
 const Loader = (props) => {
   const classes = useStyles();
 

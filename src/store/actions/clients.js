@@ -34,6 +34,7 @@ const fetchClientsFailed = error => {
   };
 };
 
+// fetch clients data via rest api
 export const fetchClients = () => {
   return async dispatch => {
     try {
@@ -48,11 +49,11 @@ export const fetchClients = () => {
         dispatch(fetchClientsSuccess(response.data));
       } else {
         dispatch(fetchClientsFailed(response.message));
-        dispatch(addAlert({message: response.message, type: 'error'}));
+        dispatch(addAlert(response.message, 'error'));
       }
     } catch (err) {
       dispatch(fetchClientsFailed(err));
-      dispatch(addAlert({message: err.message, type: 'error'}));
+      dispatch(addAlert(err.message, 'error'));
       dispatch(uiStopLoading());
     }
   };
@@ -78,6 +79,7 @@ const fetchClientFailed = error => {
   };
 };
 
+// fetch client data via rest api by passing id
 export const fetchClient = (id) => {
   return async dispatch => {
     try {
@@ -92,11 +94,11 @@ export const fetchClient = (id) => {
         dispatch(fetchClientSuccess(response.data));
       } else {
         dispatch(fetchClientFailed(response.message));
-        dispatch(addAlert({message: response.message, type: 'error'}));
+        dispatch(addAlert(response.message, 'error'));
       }
     } catch (err) {
       dispatch(fetchClientFailed(err));
-      dispatch(addAlert({message: err.message, type: 'error'}));
+      dispatch(addAlert(err.message, 'error'));
       dispatch(uiStopLoading());
     }
   };
@@ -134,14 +136,14 @@ export const saveClient = (data) => {
 
       if (response.status) {
         dispatch(saveClientSuccess(response.data));
-        dispatch(addAlert({message: response.message, type: 'success'}));
+        dispatch(addAlert(response.message, 'success'));
       } else {
         dispatch(saveClientFailed(response.message));
-        dispatch(addAlert({message: response.message, type: 'error'}));
+        dispatch(addAlert(response.message, 'error'));
       }
     } catch (err) {
       dispatch(saveClientFailed(err));
-      dispatch(addAlert({message: err.message, type: 'error'}));
+      dispatch(addAlert(err.message, 'error'));
       dispatch(uiStopLoading());
     }
   };
